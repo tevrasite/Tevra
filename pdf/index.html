@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পিডিএফ ও ইমেজ কনভার্টার</title>
+    <link rel="stylesheet" href="pdf/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-exchange-alt"></i> পিডিএফ ও ইমেজ কনভার্টার</h1>
+            <p class="subtitle">যেকোনো ইমেজ বা পিডিএফ ফাইল কনভার্ট করুন পিডিএফ বা ইমেজ ফরম্যাটে</p>
+        </header>
+
+        <div class="app-container">
+            <!-- কনভার্সন অপশন -->
+            <div class="conversion-options">
+                <div class="option-card active" id="option-img-to-pdf">
+                    <i class="fas fa-file-image"></i>
+                    <h3>ইমেজ থেকে পিডিএফ</h3>
+                    <p>JPG, PNG, GIF থেকে PDF</p>
+                </div>
+                <div class="option-card" id="option-pdf-to-img">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>পিডিএফ থেকে ইমেজ</h3>
+                    <p>PDF থেকে JPG, PNG</p>
+                </div>
+                <div class="option-card" id="option-merge-pdf">
+                    <i class="fas fa-copy"></i>
+                    <h3>মার্জ পিডিএফ</h3>
+                    <p>একাধিক পিডিএফ একসাথে করুন</p>
+                </div>
+            </div>
+
+            <!-- ফাইল আপলোড এলাকা -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3 id="upload-title">ইমেজ ফাইল নির্বাচন করুন</h3>
+                <p id="upload-subtitle">এখানে ক্লিক করুন বা ফাইলগুলো ড্র্যাগ করুন</p>
+                <input type="file" id="fileInput" multiple accept="image/*,.pdf">
+                <div class="upload-hint">
+                    <p><i class="fas fa-info-circle"></i> সর্বোচ্চ ১০টি ফাইল, প্রতিটি ১০MB পর্যন্ত</p>
+                </div>
+            </div>
+
+            <!-- নির্বাচিত ফাইল প্রিভিউ -->
+            <div class="files-preview" id="filesPreview">
+                <h3><i class="fas fa-images"></i> নির্বাচিত ফাইলসমূহ</h3>
+                <div class="files-grid" id="filesGrid">
+                    <!-- ফাইল প্রিভিউ এখানে যোগ হবে -->
+                </div>
+                <div class="preview-actions">
+                    <button id="clearFiles" class="btn-secondary">
+                        <i class="fas fa-trash"></i> সব মুছুন
+                    </button>
+                    <div class="file-count" id="fileCount">০টি ফাইল</div>
+                </div>
+            </div>
+
+            <!-- কনভার্সন সেটিংস -->
+            <div class="conversion-settings">
+                <h3><i class="fas fa-cogs"></i> সেটিংস</h3>
+                <div class="settings-grid">
+                    <div class="setting-group" id="imgToPdfSettings">
+                        <label for="pageSize"><i class="fas fa-expand"></i> পৃষ্ঠার সাইজ:</label>
+                        <select id="pageSize">
+                            <option value="a4">A4</option>
+                            <option value="letter">লেটার</option>
+                            <option value="legal">লিগাল</option>
+                        </select>
+                        
+                        <label for="orientation"><i class="fas fa-undo"></i> দিক:</label>
+                        <select id="orientation">
+                            <option value="portrait">লম্বা</option>
+                            <option value="landscape">আড়াআড়ি</option>
+                        </select>
+                        
+                        <label for="margin"><i class="fas fa-border-all"></i> মার্জিন:</label>
+                        <select id="margin">
+                            <option value="10">ছোট</option>
+                            <option value="20" selected>মাঝারি</option>
+                            <option value="30">বড়</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group" id="pdfToImgSettings" style="display: none;">
+                        <label for="imageFormat"><i class="fas fa-file-image"></i> ইমেজ ফরম্যাট:</label>
+                        <select id="imageFormat">
+                            <option value="jpg">JPG</option>
+                            <option value="png">PNG</option>
+                        </select>
+                        
+                        <label for="imageQuality"><i class="fas fa-tachometer-alt"></i> কোয়ালিটি:</label>
+                        <select id="imageQuality">
+                            <option value="0.7">মাঝারি</option>
+                            <option value="1" selected>উচ্চ</option>
+                            <option value="0.4">নিম্ন</option>
+                        </select>
+                        
+                        <label for="dpi"><i class="fas fa-search"></i> রেজুলেশন:</label>
+                        <select id="dpi">
+                            <option value="150">150 DPI</option>
+                            <option value="300" selected>300 DPI</option>
+                            <option value="72">72 DPI</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- কনভার্ট বাটন -->
+            <div class="action-section">
+                <button id="convertBtn" class="btn-primary">
+                    <i class="fas fa-sync-alt"></i> কনভার্ট করুন
+                </button>
+                <button id="downloadBtn" class="btn-success" style="display: none;">
+                    <i class="fas fa-download"></i> ডাউনলোড করুন
+                </button>
+                <button id="resetBtn" class="btn-secondary">
+                    <i class="fas fa-redo"></i> রিসেট করুন
+                </button>
+            </div>
+
+            <!-- প্রোগ্রেস বার -->
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">০% সম্পূর্ণ</div>
+            </div>
+
+            <!-- ফলাফল প্রিভিউ -->
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h3><i class="fas fa-check-circle"></i> রূপান্তর সম্পূর্ণ!</h3>
+                <div class="result-preview" id="resultPreview">
+                    <!-- রেজাল্ট প্রিভিউ এখানে দেখাবে -->
+                </div>
+            </div>
+        </div>
+
+        <!-- তথ্য বিভাগ -->
+        <div class="info-section">
+            <h3><i class="fas fa-lightbulb"></i> কিভাবে ব্যবহার করবেন:</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h4>১. ফাইল আপলোড করুন</h4>
+                    <p>ক্লিক করুন বা ইমেজ/পিডিএফ ফাইল ড্র্যাগ করুন</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h4>২. সেটিংস কনফিগার করুন</h4>
+                    <p>আপনার প্রয়োজন অনুযায়ী সেটিংস পরিবর্তন করুন</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h4>৩. কনভার্ট করুন</h4>
+                    <p>কনভার্ট বাটনে ক্লিক করুন এবং অপেক্ষা করুন</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h4>৪. ডাউনলোড করুন</h4>
+                    <p>কনভার্টেড ফাইল আপনার ডিভাইসে সেভ করুন</p>
+                </div>
+            </div>
+            
+            <div class="format-info">
+                <h4><i class="fas fa-file-alt"></i> সমর্থিত ফরম্যাটসমূহ:</h4>
+                <div class="format-list">
+                    <div class="format-item">
+                        <span class="format-badge img-badge">ইমেজ</span>
+                        <span>JPG, PNG, GIF, BMP, WebP</span>
+                    </div>
+                    <div class="format-item">
+                        <span class="format-badge pdf-badge">পিডিএফ</span>
+                        <span>PDF (সর্বোচ্চ ৫০ পৃষ্ঠা)</span>
+                    </div>
+                </div>
+                <div class="note">
+                    <p><i class="fas fa-exclamation-triangle"></i> <strong>দ্রষ্টব্য:</strong> সমস্ত প্রক্রিয়াকরণ আপনার ব্রাউজারে সম্পন্ন হয়। ফাইলগুলো কোন সার্ভারে আপলোড করা হয় না।</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© ২০২৩ পিডিএফ ও ইমেজ কনভার্টার | তৈরি হয়েছে HTML, CSS এবং JavaScript দিয়ে</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-question-circle"></i> সাহায্য</a>
+                <a href="#"><i class="fas fa-shield-alt"></i> গোপনীয়তা</a>
+                <a href="#"><i class="fas fa-envelope"></i> যোগাযোগ</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="pdf/script/script.js"></script>
+</body>
+</html>
