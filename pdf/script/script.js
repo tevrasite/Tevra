@@ -1,137 +1,147 @@
-// DOM এলিমেন্ট নির্বাচন
-const uploadArea = document.getElementById('uploadArea');
-const fileInput = document.getElementById('fileInput');
-const filesGrid = document.getElementById('filesGrid');
-const fileCount = document.getElementById('fileCount');
-const clearFilesBtn = document.getElementById('clearFiles');
-const convertBtn = document.getElementById('convertBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const resetBtn = document.getElementById('resetBtn');
-const progressSection = document.getElementById('progressSection');
-const progressFill = document.getElementById('progressFill');
-const progressText = document.getElementById('progressText');
-const resultSection = document.getElementById('resultSection');
-const resultPreview = document.getElementById('resultPreview');
-const uploadTitle = document.getElementById('uploadTitle');
-const uploadSubtitle = document.getElementById('uploadSubtitle');
-
-// কনভার্সন অপশন নির্বাচন
-const optionImgToPdf = document.getElementById('option-img-to-pdf');
-const optionPdfToImg = document.getElementById('option-pdf-to-img');
-const optionMergePdf = document.getElementById('option-merge-pdf');
-
-// সেটিংস গ্রুপ
-const imgToPdfSettings = document.getElementById('imgToPdfSettings');
-const pdfToImgSettings = document.getElementById('pdfToImgSettings');
+// DOM এলিমেন্টস
+const elements = {
+    uploadArea: document.getElementById('uploadArea'),
+    fileInput: document.getElementById('fileInput'),
+    filesGrid: document.getElementById('filesGrid'),
+    fileCount: document.getElementById('fileCount'),
+    clearFilesBtn: document.getElementById('clearFiles'),
+    convertBtn: document.getElementById('convertBtn'),
+    downloadBtn: document.getElementById('downloadBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    progressSection: document.getElementById('progressSection'),
+    progressFill: document.getElementById('progressFill'),
+    progressText: document.getElementById('progressText'),
+    resultSection: document.getElementById('resultSection'),
+    resultPreview: document.getElementById('resultPreview'),
+    filesPreview: document.getElementById('filesPreview'),
+    uploadTitle: document.getElementById('uploadTitle'),
+    uploadSubtitle: document.getElementById('uploadSubtitle'),
+    optionImgToPdf: document.getElementById('option-img-to-pdf'),
+    optionPdfToImg: document.getElementById('option-pdf-to-img'),
+    imgToPdfSettings: document.getElementById('imgToPdfSettings'),
+    pdfToImgSettings: document.getElementById('pdfToImgSettings'),
+    helpBtn: document.getElementById('helpBtn'),
+    privacyBtn: document.getElementById('privacyBtn'),
+    helpModal: document.getElementById('helpModal'),
+    closeModal: document.querySelector('.close-modal')
+};
 
 // গ্লোবাল ভেরিয়েবল
 let selectedFiles = [];
 let currentConversionType = 'img-to-pdf';
 let convertedResult = null;
+let jsPDF = window.jspdf.jsPDF;
 
-// ইভেন্ট লিসেনার যোগ করুন
-document.addEventListener('DOMContentLoaded', initApp);
-
-// অ্যাপ্লিকেশন ইনিশিয়ালাইজেশন
+// অ্যাপ ইনিশিয়ালাইজেশন
 function initApp() {
-    // অপশন কার্ড ক্লিক ইভেন্ট
-    optionImgToPdf.addEventListener('click', () => switchConversionType('img-to-pdf'));
-    optionPdfToImg.addEventListener('click', () => switchConversionType('pdf-to-img'));
-    optionMergePdf.addEventListener('click', () => switchConversionType('merge-pdf'));
+    console.log('অ্যাপ্লিকেশন শুরু হচ্ছে...');
     
-    // ফাইল আপলোড ইভেন্ট
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', handleDragOver);
-    uploadArea.addEventListener('dragleave', handleDragLeave);
-    uploadArea.addEventListener('drop', handleDrop);
-    fileInput.addEventListener('change', handleFileSelect);
+    // ইভেন্ট লিসেনার যোগ
+    setupEventListeners();
     
-    // বাটন ইভেন্ট
-    clearFilesBtn.addEventListener('click', clearAllFiles);
-    convertBtn.addEventListener('click', startConversion);
-    downloadBtn.addEventListener('click', downloadResult);
-    resetBtn.addEventListener('click', resetApp);
-    
-    // ডিফল্ট কনভার্সন টাইপ সেট করুন
+    // ডিফল্ট সেটিংস
     switchConversionType('img-to-pdf');
+    
+    console.log('অ্যাপ্লিকেশন প্রস্তুত!');
+}
+
+// ইভেন্ট লিসেনার সেটাপ
+function setupEventListeners() {
+    // কনভার্সন টাইপ পরিবর্তন
+    elements.optionImgToPdf.addEventListener('click', () => switchConversionType('img-to-pdf'));
+    elements.optionPdfToImg.addEventListener('click', () => switchConversionType('pdf-to-img'));
+    
+    // ফাইল আপলোড
+    elements.uploadArea.addEventListener('click', () => elements.fileInput.click());
+    elements.uploadArea.addEventListener('dragover', handleDragOver);
+    elements.uploadArea.addEventListener('dragleave', handleDragLeave);
+    elements.uploadArea.addEventListener('drop', handleDrop);
+    elements.fileInput.addEventListener('change', handleFileSelect);
+    
+    // ফাইল ম্যানেজমেন্ট
+    elements.clearFilesBtn.addEventListener('click', clearAllFiles);
+    
+    // কনভার্সন ও ডাউনলোড
+    elements.convertBtn.addEventListener('click', startConversion);
+    elements.downloadBtn.addEventListener('click', downloadResult);
+    elements.resetBtn.addEventListener('click', resetApp);
+    
+    // মোডাল
+    elements.helpBtn.addEventListener('click', showHelpModal);
+    elements.privacyBtn.addEventListener('click', showPrivacyInfo);
+    elements.closeModal.addEventListener('click', () => {
+        elements.helpModal.style.display = 'none';
+    });
+    
+    // মোডাল বাইরে ক্লিক
+    window.addEventListener('click', (e) => {
+        if (e.target === elements.helpModal) {
+            elements.helpModal.style.display = 'none';
+        }
+    });
 }
 
 // কনভার্সন টাইপ পরিবর্তন
 function switchConversionType(type) {
+    console.log(`কনভার্সন টাইপ পরিবর্তন: ${type}`);
+    
     currentConversionType = type;
     
-    // অপশন কার্ড একটিভ স্টাইল
+    // অপশন কার্ড আপডেট
     document.querySelectorAll('.option-card').forEach(card => {
         card.classList.remove('active');
     });
     
     if (type === 'img-to-pdf') {
-        optionImgToPdf.classList.add('active');
-        uploadTitle.textContent = 'ইমেজ ফাইল নির্বাচন করুন';
-        uploadSubtitle.textContent = 'এখানে ক্লিক করুন বা ইমেজ ফাইলগুলো ড্র্যাগ করুন';
-        fileInput.setAttribute('accept', 'image/*');
-        
-        // সেটিংস দেখান/লুকান
-        imgToPdfSettings.style.display = 'flex';
-        pdfToImgSettings.style.display = 'none';
-        
-        // ফাইল লিমিট
-        fileInput.setAttribute('multiple', 'true');
+        elements.optionImgToPdf.classList.add('active');
+        elements.uploadTitle.textContent = 'ইমেজ ফাইল নির্বাচন করুন';
+        elements.uploadSubtitle.textContent = 'এখানে ক্লিক করুন বা ইমেজ ফাইল ড্র্যাগ করুন';
+        elements.fileInput.setAttribute('accept', 'image/*');
+        elements.fileInput.setAttribute('multiple', 'true');
+        elements.imgToPdfSettings.style.display = 'flex';
+        elements.pdfToImgSettings.style.display = 'none';
         
     } else if (type === 'pdf-to-img') {
-        optionPdfToImg.classList.add('active');
-        uploadTitle.textContent = 'পিডিএফ ফাইল নির্বাচন করুন';
-        uploadSubtitle.textContent = 'এখানে ক্লিক করুন বা পিডিএফ ফাইল ড্র্যাগ করুন';
-        fileInput.setAttribute('accept', '.pdf');
-        
-        // সেটিংস দেখান/লুকান
-        imgToPdfSettings.style.display = 'none';
-        pdfToImgSettings.style.display = 'flex';
-        
-        // ফাইল লিমিট
-        fileInput.removeAttribute('multiple');
-        
-    } else if (type === 'merge-pdf') {
-        optionMergePdf.classList.add('active');
-        uploadTitle.textContent = 'পিডিএফ ফাইলসমূহ নির্বাচন করুন';
-        uploadSubtitle.textContent = 'এখানে ক্লিক করুন বা পিডিএফ ফাইলগুলো ড্র্যাগ করুন';
-        fileInput.setAttribute('accept', '.pdf');
-        
-        // সেটিংস দেখান/লুকান
-        imgToPdfSettings.style.display = 'flex';
-        pdfToImgSettings.style.display = 'none';
-        
-        // ফাইল লিমিট
-        fileInput.setAttribute('multiple', 'true');
+        elements.optionPdfToImg.classList.add('active');
+        elements.uploadTitle.textContent = 'পিডিএফ ফাইল নির্বাচন করুন';
+        elements.uploadSubtitle.textContent = 'এখানে ক্লিক করুন বা পিডিএফ ফাইল ড্র্যাগ করুন';
+        elements.fileInput.setAttribute('accept', '.pdf');
+        elements.fileInput.removeAttribute('multiple');
+        elements.imgToPdfSettings.style.display = 'none';
+        elements.pdfToImgSettings.style.display = 'flex';
     }
     
-    // নির্বাচিত ফাইল রিসেট করুন
-    selectedFiles = [];
-    updateFilePreview();
+    // নির্বাচিত ফাইল রিসেট
+    clearAllFiles();
+    
+    showToast('কনভার্সন টাইপ পরিবর্তন করা হয়েছে', 'success');
 }
 
-// ড্র্যাগ ওভার ইভেন্ট হ্যান্ডলার
+// ড্র্যাগ ওভার হ্যান্ডলার
 function handleDragOver(e) {
     e.preventDefault();
-    uploadArea.classList.add('dragover');
+    e.stopPropagation();
+    elements.uploadArea.classList.add('dragover');
 }
 
-// ড্র্যাগ লিভ ইভেন্ট হ্যান্ডলার
+// ড্র্যাগ লিভ হ্যান্ডলার
 function handleDragLeave(e) {
     e.preventDefault();
-    uploadArea.classList.remove('dragover');
+    e.stopPropagation();
+    elements.uploadArea.classList.remove('dragover');
 }
 
-// ড্রপ ইভেন্ট হ্যান্ডলার
+// ড্রপ হ্যান্ডলার
 function handleDrop(e) {
     e.preventDefault();
-    uploadArea.classList.remove('dragover');
+    e.stopPropagation();
+    elements.uploadArea.classList.remove('dragover');
     
     const files = Array.from(e.dataTransfer.files);
     processFiles(files);
 }
 
-// ফাইল সিলেক্ট ইভেন্ট হ্যান্ডলার
+// ফাইল সিলেক্ট হ্যান্ডলার
 function handleFileSelect(e) {
     const files = Array.from(e.target.files);
     processFiles(files);
@@ -139,42 +149,50 @@ function handleFileSelect(e) {
 
 // ফাইল প্রসেসিং
 function processFiles(files) {
-    // ফাইল লিমিট চেক করুন
-    let maxFiles = 10;
-    let maxSize = 10 * 1024 * 1024; // 10MB
+    console.log(`প্রসেসিং ফাইল: ${files.length}টি`);
     
-    if (currentConversionType === 'pdf-to-img') {
-        maxFiles = 1;
-        maxSize = 50 * 1024 * 1024; // 50MB for PDF
-    }
+    if (files.length === 0) return;
     
-    // ফাইল সংখ্যা চেক করুন
+    // ফাইল লিমিট চেক
+    let maxFiles = currentConversionType === 'img-to-pdf' ? 20 : 1;
+    let maxSize = 20 * 1024 * 1024; // 20MB
+    
     if (selectedFiles.length + files.length > maxFiles) {
-        alert(`সর্বোচ্চ ${maxFiles}টি ফাইল আপলোড করতে পারবেন।`);
+        showToast(`সর্বোচ্চ ${maxFiles}টি ফাইল আপলোড করতে পারবেন`, 'error');
         return;
     }
     
-    // প্রতিটি ফাইল প্রসেস করুন
-    files.forEach(file => {
-        // ফাইল সাইজ চেক করুন
+    let validFiles = [];
+    
+    files.forEach((file, index) => {
+        // ফাইল সাইজ চেক
         if (file.size > maxSize) {
-            alert(`"${file.name}" ফাইলের সাইজ খুব বড়। সর্বোচ্চ ${formatFileSize(maxSize)} পর্যন্ত ফাইল আপলোড করতে পারবেন।`);
+            showToast(`"${file.name}" - ফাইল সাইজ খুব বড় (সর্বোচ্চ 20MB)`, 'error');
             return;
         }
         
-        // ফাইল টাইপ চেক করুন
-        if (currentConversionType === 'img-to-pdf' || currentConversionType === 'merge-pdf') {
-            const validTypes = currentConversionType === 'img-to-pdf' 
-                ? ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp']
-                : ['application/pdf'];
-                
-            if (!validTypes.includes(file.type)) {
-                alert(`"${file.name}" ফাইল ফরম্যাট সাপোর্টেড নয়।`);
+        // ফাইল টাইপ চেক
+        if (currentConversionType === 'img-to-pdf') {
+            if (!file.type.startsWith('image/')) {
+                showToast(`"${file.name}" - শুধুমাত্র ইমেজ ফাইল সাপোর্টেড`, 'error');
+                return;
+            }
+        } else if (currentConversionType === 'pdf-to-img') {
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                showToast(`"${file.name}" - শুধুমাত্র PDF ফাইল সাপোর্টেড`, 'error');
                 return;
             }
         }
         
-        // ফাইল প্রিভিউ তৈরি করুন
+        validFiles.push(file);
+    });
+    
+    if (validFiles.length === 0) return;
+    
+    // ফাইল পড়া শুরু
+    let filesProcessed = 0;
+    
+    validFiles.forEach(file => {
         const reader = new FileReader();
         
         reader.onload = function(e) {
@@ -184,87 +202,118 @@ function processFiles(files) {
                 size: file.size,
                 type: file.type,
                 data: e.target.result,
-                url: e.target.result
+                url: URL.createObjectURL(file)
             };
             
             selectedFiles.push(fileData);
-            updateFilePreview();
+            filesProcessed++;
+            
+            if (filesProcessed === validFiles.length) {
+                updateFilePreview();
+                elements.fileInput.value = '';
+                showToast(`${validFiles.length}টি ফাইল সফলভাবে আপলোড হয়েছে`, 'success');
+            }
         };
         
-        if (file.type.startsWith('image/')) {
+        reader.onerror = function() {
+            showToast(`"${file.name}" পড়তে সমস্যা হয়েছে`, 'error');
+        };
+        
+        if (currentConversionType === 'img-to-pdf') {
             reader.readAsDataURL(file);
         } else {
             reader.readAsArrayBuffer(file);
         }
     });
-    
-    // ফাইল ইনপুট রিসেট করুন
-    fileInput.value = '';
 }
 
-// ফাইল প্রিভিউ আপডেট করুন
+// ফাইল প্রিভিউ আপডেট
 function updateFilePreview() {
-    filesGrid.innerHTML = '';
+    console.log('ফাইল প্রিভিউ আপডেট হচ্ছে...');
+    
+    elements.filesGrid.innerHTML = '';
     
     if (selectedFiles.length === 0) {
-        filesGrid.innerHTML = `
-            <div class="no-files">
-                <i class="fas fa-folder-open" style="font-size: 3rem; color: #bdc3c7; margin-bottom: 15px;"></i>
-                <p style="color: #7f8c8d;">কোন ফাইল নির্বাচন করা হয়নি</p>
-            </div>
-        `;
-        fileCount.textContent = '০টি ফাইল';
+        elements.filesPreview.classList.remove('active');
         return;
     }
     
+    elements.filesPreview.classList.add('active');
+    
     selectedFiles.forEach((file, index) => {
         const fileItem = document.createElement('div');
-        fileItem.className = 'file-item fade-in';
+        fileItem.className = 'file-item';
+        fileItem.dataset.index = index;
         
-        // ফাইল প্রিভিউ স্টার
         let previewContent = '';
+        let fileIcon = '';
+        
         if (file.type.startsWith('image/')) {
             previewContent = `<img src="${file.url}" alt="${file.name}" class="file-preview">`;
-        } else if (file.type === 'application/pdf') {
+            fileIcon = 'fa-file-image';
+        } else if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
             previewContent = `
-                <div class="pdf-preview" style="width: 100%; height: 120px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                    <i class="fas fa-file-pdf" style="font-size: 3rem; color: white;"></i>
+                <div style="width: 100%; height: 140px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                    <i class="fas fa-file-pdf" style="font-size: 3.5rem; color: white;"></i>
                 </div>
             `;
+            fileIcon = 'fa-file-pdf';
         }
         
         fileItem.innerHTML = `
             ${previewContent}
-            <div class="file-name">${truncateFileName(file.name, 20)}</div>
+            <div class="file-name">
+                <i class="fas ${fileIcon}"></i> ${truncateFileName(file.name, 22)}
+            </div>
             <div class="file-size">${formatFileSize(file.size)}</div>
             <button class="remove-file" data-index="${index}">
                 <i class="fas fa-times"></i>
             </button>
         `;
         
-        filesGrid.appendChild(fileItem);
+        elements.filesGrid.appendChild(fileItem);
     });
     
-    // রিমুভ বাটনে ইভেন্ট লিসেনার যোগ করুন
+    // রিমুভ বাটন ইভেন্ট
     document.querySelectorAll('.remove-file').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
-            const index = parseInt(this.getAttribute('data-index'));
+            const index = parseInt(this.dataset.index);
             removeFile(index);
         });
     });
     
-    // ফাইল সংখ্যা আপডেট করুন
-    fileCount.textContent = `${selectedFiles.length}টি ফাইল`;
+    // ফাইল কাউন্ট
+    elements.fileCount.textContent = `${selectedFiles.length}টি ফাইল`;
 }
 
-// ফাইল নাম সংক্ষিপ্ত করুন
+// ফাইল রিমুভ
+function removeFile(index) {
+    if (index >= 0 && index < selectedFiles.length) {
+        const removedFile = selectedFiles.splice(index, 1)[0];
+        URL.revokeObjectURL(removedFile.url);
+        updateFilePreview();
+        showToast('ফাইল মুছে ফেলা হয়েছে', 'info');
+    }
+}
+
+// সব ফাইল ক্লিয়ার
+function clearAllFiles() {
+    selectedFiles.forEach(file => {
+        URL.revokeObjectURL(file.url);
+    });
+    selectedFiles = [];
+    updateFilePreview();
+    showToast('সব ফাইল মুছে ফেলা হয়েছে', 'info');
+}
+
+// ফাইল নাম সংক্ষিপ্তকরণ
 function truncateFileName(name, maxLength) {
     if (name.length <= maxLength) return name;
     return name.substring(0, maxLength) + '...';
 }
 
-// ফাইল সাইজ ফরম্যাট করুন
+// ফাইল সাইজ ফরম্যাট
 function formatFileSize(bytes) {
     if (bytes === 0) return '0 Bytes';
     
@@ -275,123 +324,125 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-// ফাইল রিমুভ করুন
-function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    updateFilePreview();
-}
-
-// সব ফাইল ক্লিয়ার করুন
-function clearAllFiles() {
-    selectedFiles = [];
-    updateFilePreview();
-}
-
-// প্রগ্রেস বার আপডেট করুন
+// প্রগ্রেস আপডেট
 function updateProgress(percent, text) {
-    progressFill.style.width = `${percent}%`;
-    progressText.textContent = text;
+    elements.progressFill.style.width = `${percent}%`;
+    elements.progressText.textContent = text;
     
     if (percent === 100) {
         setTimeout(() => {
-            progressText.innerHTML = `<i class="fas fa-check-circle"></i> ${text}`;
+            elements.progressText.innerHTML = `<i class="fas fa-check-circle"></i> ${text}`;
         }, 500);
     }
 }
 
-// কনভার্সন শুরু করুন
-function startConversion() {
-    // ভ্যালিডেশন চেক করুন
+// কনভার্সন শুরু
+async function startConversion() {
+    console.log('কনভার্সন শুরু...');
+    
     if (selectedFiles.length === 0) {
-        alert('কনভার্ট করার জন্য কমপক্ষে একটি ফাইল নির্বাচন করুন।');
+        showToast('কনভার্ট করার জন্য ফাইল নির্বাচন করুন', 'error');
         return;
     }
     
-    // প্রগ্রেস সেকশন দেখান
-    progressSection.style.display = 'block';
-    resultSection.style.display = 'none';
-    downloadBtn.style.display = 'none';
+    // UI সেটাপ
+    elements.convertBtn.disabled = true;
+    elements.convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> প্রসেসিং...';
+    elements.progressSection.classList.add('active');
+    elements.resultSection.classList.remove('active');
+    elements.downloadBtn.style.display = 'none';
     
-    // কনভার্ট বাটন ডিজেবল করুন
-    convertBtn.disabled = true;
-    convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> প্রসেসিং...';
-    
-    // কনভার্সন টাইপ অনুযায়ী ফাংশন কল করুন
-    if (currentConversionType === 'img-to-pdf') {
-        convertImagesToPdf();
-    } else if (currentConversionType === 'pdf-to-img') {
-        convertPdfToImages();
-    } else if (currentConversionType === 'merge-pdf') {
-        mergePdfs();
+    try {
+        if (currentConversionType === 'img-to-pdf') {
+            await convertImagesToPdf();
+        } else if (currentConversionType === 'pdf-to-img') {
+            await convertPdfToImages();
+        }
+    } catch (error) {
+        console.error('কনভার্সন এরর:', error);
+        showToast('কনভার্সন ব্যর্থ হয়েছে: ' + error.message, 'error');
+        resetConversionUI();
     }
 }
 
-// ইমেজ থেকে PDF কনভার্ট করুন
+// ইমেজ থেকে PDF
 async function convertImagesToPdf() {
+    console.log('ইমেজ থেকে PDF কনভার্ট শুরু...');
+    
     try {
         updateProgress(10, 'ইমেজ প্রসেসিং...');
         
-        const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        
-        // পেজ সাইজ ও ওরিয়েন্টেশন সেট করুন
         const pageSize = document.getElementById('pageSize').value;
         const orientation = document.getElementById('orientation').value;
-        const margin = parseInt(document.getElementById('margin').value);
+        const quality = document.getElementById('pdfQuality').value;
         
-        // পেজ সাইজ ম্যাপিং
-        const pageSizes = {
-            'a4': [210, 297],
-            'letter': [216, 279],
-            'legal': [216, 356]
+        // কোয়ালিটি সেটিংস
+        const qualitySettings = {
+            high: { compression: 'NONE', dpi: 300 },
+            medium: { compression: 'MEDIUM', dpi: 150 },
+            low: { compression: 'HIGH', dpi: 72 }
         };
         
-        const dimensions = pageSizes[pageSize] || pageSizes.a4;
+        const settings = qualitySettings[quality] || qualitySettings.medium;
         
-        // প্রতিটি ইমেজের জন্য
+        // পেজ সাইজ
+        const pageSizes = {
+            a4: { portrait: [210, 297], landscape: [297, 210] },
+            letter: { portrait: [216, 279], landscape: [279, 216] }
+        };
+        
+        const dimensions = pageSizes[pageSize][orientation];
+        
         for (let i = 0; i < selectedFiles.length; i++) {
-            updateProgress(10 + (i / selectedFiles.length) * 80, `${i+1}/${selectedFiles.length} ইমেজ প্রসেসিং...`);
+            const progress = 10 + (i / selectedFiles.length) * 80;
+            updateProgress(progress, `ইমেজ ${i + 1}/${selectedFiles.length} প্রসেসিং...`);
             
             const file = selectedFiles[i];
             
-            // নতুন পেজ যোগ করুন (প্রথম ইমেজ ছাড়া)
             if (i > 0) {
-                doc.addPage();
+                doc.addPage(dimensions, orientation.toUpperCase());
+            } else {
+                doc.deletePage(1);
+                doc.addPage(dimensions, orientation.toUpperCase());
             }
             
-            // ইমেজ লোড করুন
-            const img = new Image();
-            await new Promise((resolve, reject) => {
-                img.onload = resolve;
-                img.onerror = reject;
-                img.src = file.data;
-            });
+            // ইমেজ লোড
+            const img = await loadImage(file.data);
             
-            // ইমেজ ডাইমেনশন ক্যালকুলেট করুন
-            const pageWidth = orientation === 'landscape' ? dimensions[1] : dimensions[0];
-            const pageHeight = orientation === 'landscape' ? dimensions[0] : dimensions[1];
+            // ইমেজ ডাইমেনশন ক্যালকুলেট
+            const pageWidth = dimensions[0];
+            const pageHeight = dimensions[1];
+            const margin = 20;
             
             const contentWidth = pageWidth - (margin * 2);
             const contentHeight = pageHeight - (margin * 2);
             
-            // ইমেজ রেশিও মেইন্টেইন করে রিসাইজ করুন
-            const imgRatio = img.width / img.height;
-            let imgWidth = contentWidth;
-            let imgHeight = contentWidth / imgRatio;
+            let imgWidth = img.width;
+            let imgHeight = img.height;
             
-            if (imgHeight > contentHeight) {
+            // ইমেজ রেশিও মেইনটেইন করে রিসাইজ
+            const imgRatio = imgWidth / imgHeight;
+            const contentRatio = contentWidth / contentHeight;
+            
+            if (imgRatio > contentRatio) {
+                // ইমেজ চওড়া
+                imgWidth = contentWidth;
+                imgHeight = contentWidth / imgRatio;
+            } else {
+                // ইমেজ লম্বা
                 imgHeight = contentHeight;
                 imgWidth = contentHeight * imgRatio;
             }
             
-            // ইমেজ কেন্দ্রে রাখুন
-            const x = (pageWidth - imgWidth) / 2;
-            const y = (pageHeight - imgHeight) / 2;
+            // ইমেজ কেন্দ্রে রাখা
+            const x = margin + (contentWidth - imgWidth) / 2;
+            const y = margin + (contentHeight - imgHeight) / 2;
             
-            // পিডিএফে ইমেজ যোগ করুন
+            // PDF এ ইমেজ যোগ
             doc.addImage(img, 'JPEG', x, y, imgWidth, imgHeight);
             
-            // পেজ নম্বর যোগ করুন
+            // পেজ নম্বর
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
             doc.text(
@@ -401,13 +452,12 @@ async function convertImagesToPdf() {
                 { align: 'center' }
             );
             
-            // ছোট ডিলে দিন UI আপডেটের জন্য
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await delay(100); // UI আপডেটের জন্য
         }
         
-        updateProgress(95, 'পিডিএফ জেনারেট করা হচ্ছে...');
+        updateProgress(95, 'PDF জেনারেট করা হচ্ছে...');
         
-        // পিডিএফ ব্লব তৈরি করুন
+        // PDF ব্লব তৈরি
         const pdfBlob = doc.output('blob');
         const pdfUrl = URL.createObjectURL(pdfBlob);
         
@@ -415,158 +465,413 @@ async function convertImagesToPdf() {
             type: 'pdf',
             blob: pdfBlob,
             url: pdfUrl,
-            name: `converted-${Date.now()}.pdf`
+            name: generateFileName('converted', 'pdf'),
+            size: pdfBlob.size
         };
         
         updateProgress(100, 'কনভার্সন সম্পূর্ণ!');
         
-        // রেজাল্ট দেখান
-        showResult();
+        // ফলাফল দেখানো
+        setTimeout(() => showResult(), 1000);
         
     } catch (error) {
-        console.error('Error converting images to PDF:', error);
-        alert('কনভার্সন প্রক্রিয়ায় সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-        resetConversionUI();
+        throw new Error('ইমেজ থেকে PDF কনভার্ট করতে সমস্যা: ' + error.message);
     }
 }
 
-// PDF থেকে ইমেজ কনভার্ট করুন
+// PDF থেকে ইমেজ
 async function convertPdfToImages() {
+    console.log('PDF থেকে ইমেজ কনভার্ট শুরু...');
+    
     try {
-        updateProgress(10, 'পিডিএফ লোডিং...');
+        updateProgress(10, 'PDF লোডিং...');
         
         const pdfFile = selectedFiles[0];
-        
-        // পিডিএফ.js দিয়ে পিডিএফ লোড করুন
-        const pdfData = new Uint8Array(pdfFile.data);
-        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
-        const numPages = pdf.numPages;
-        
-        updateProgress(20, 'পিডিএফ পৃষ্ঠা প্রসেসিং...');
-        
         const imageFormat = document.getElementById('imageFormat').value;
         const imageQuality = parseFloat(document.getElementById('imageQuality').value);
         const dpi = parseInt(document.getElementById('dpi').value);
         
-        const scale = dpi / 72; // 72 DPI is default
+        // PDF লোড
+        const pdfData = new Uint8Array(pdfFile.data);
+        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+        const numPages = pdf.numPages;
+        
+        updateProgress(20, 'PDF প্রসেসিং...');
         
         const images = [];
+        const scale = dpi / 72;
         
-        // প্রতিটি পেজের জন্য
         for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-            updateProgress(20 + (pageNum / numPages) * 70, `পৃষ্ঠা ${pageNum}/${numPages} প্রসেসিং...`);
+            const progress = 20 + ((pageNum - 1) / numPages) * 70;
+            updateProgress(progress, `পৃষ্ঠা ${pageNum}/${numPages} কনভার্টিং...`);
             
             const page = await pdf.getPage(pageNum);
             const viewport = page.getViewport({ scale });
             
-            // ক্যানভাস তৈরি করুন
+            // ক্যানভাস তৈরি
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             
-            canvas.height = viewport.height;
             canvas.width = viewport.width;
+            canvas.height = viewport.height;
             
-            // ক্যানভাসে পেজ রেন্ডার করুন
+            // রেন্ডার
             await page.render({
                 canvasContext: context,
                 viewport: viewport
             }).promise;
             
-            // ইমেজ ডেটা URL তৈরি করুন
+            // ইমেজ ডেটা
             const imageData = canvas.toDataURL(`image/${imageFormat}`, imageQuality);
             
             images.push({
                 data: imageData,
-                page: pageNum
+                page: pageNum,
+                format: imageFormat
             });
             
-            // ছোট ডিলে দিন UI আপডেটের জন্য
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await delay(100);
         }
         
-        updateProgress(95, 'ইমেজ তৈরি করা হচ্ছে...');
+        updateProgress(95, 'ইমেজ প্রস্তুত করা হচ্ছে...');
         
-        // যদি একাধিক ইমেজ হয়, তাহলে ZIP ফাইল তৈরি করুন
-        if (images.length > 1) {
+        if (images.length === 1) {
+            // একক ইমেজ
+            const blob = dataURLToBlob(images[0].data);
+            const url = URL.createObjectURL(blob);
+            
+            convertedResult = {
+                type: 'image',
+                blob: blob,
+                url: url,
+                name: generateFileName('page-1', imageFormat),
+                size: blob.size
+            };
+        } else {
+            // একাধিক ইমেজ (ZIP)
             convertedResult = {
                 type: 'zip',
                 images: images,
-                name: `converted-pdf-${Date.now()}.zip`
-            };
-        } else {
-            // শুধু একটি ইমেজ হলে
-            convertedResult = {
-                type: 'image',
-                blob: dataURLToBlob(images[0].data),
-                url: images[0].data,
-                name: `converted-page-1.${imageFormat}`
+                name: generateFileName('converted-pdf', 'zip')
             };
         }
         
         updateProgress(100, 'কনভার্সন সম্পূর্ণ!');
         
-        // রেজাল্ট দেখান
-        showResult();
+        // ফলাফল দেখানো
+        setTimeout(() => showResult(), 1000);
         
     } catch (error) {
-        console.error('Error converting PDF to images:', error);
-        alert('পিডিএফ কনভার্ট করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-        resetConversionUI();
+        throw new Error('PDF থেকে ইমেজ কনভার্ট করতে সমস্যা: ' + error.message);
     }
 }
 
-// একাধিক PDF মার্জ করুন
-async function mergePdfs() {
-    try {
-        if (selectedFiles.length < 2) {
-            alert('মার্জ করার জন্য কমপক্ষে ২টি পিডিএফ ফাইল নির্বাচন করুন।');
-            resetConversionUI();
-            return;
-        }
-        
-        updateProgress(10, 'পিডিএফ ফাইল প্রসেসিং...');
-        
-        // এই ফাংশনটি সম্পূর্ণ করতে পিডিএফ লাইব্রেরি প্রয়োজন
-        // যেহেতু আমরা শুধু ক্লায়েন্ট সাইড কোড লিখছি, একটি সহজ ইমপ্লিমেন্টেশন দেখাচ্ছি
-        alert('PDF মার্জ ফিচারটি সম্পূর্ণভাবে ইমপ্লিমেন্ট করার জন্য অতিরিক্ত লাইব্রেরি প্রয়োজন।\n\nআপনি অনলাইন PDF মার্জ টুল ব্যবহার করতে পারেন অথবা আমরা শীঘ্রই এই ফিচারটি যোগ করব।');
-        
-        resetConversionUI();
-        
-    } catch (error) {
-        console.error('Error merging PDFs:', error);
-        alert('পিডিএফ মার্জ করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-        resetConversionUI();
-    }
-}
-
-// রেজাল্ট দেখান
+// ফলাফল দেখানো
 function showResult() {
-    // প্রগ্রেস বার হাইড করুন
-    setTimeout(() => {
-        progressSection.style.display = 'none';
-        
-        // রেজাল্ট সেকশন দেখান
-        resultSection.style.display = 'block';
-        resultPreview.innerHTML = '';
-        
-        if (currentConversionType === 'img-to-pdf') {
-            // PDF প্রিভিউ
-            resultPreview.innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <i class="fas fa-file-pdf" style="font-size: 4rem; color: #e74c3c; margin-bottom: 15px;"></i>
-                    <h4 style="color: #2c3e50; margin-bottom: 10px;">PDF তৈরি সম্পূর্ণ!</h4>
-                    <p style="color: #7f8c8d;">${selectedFiles.length}টি ইমেজ থেকে PDF তৈরি হয়েছে।</p>
+    console.log('ফলাফল দেখানো হচ্ছে...');
+    
+    elements.progressSection.classList.remove('active');
+    elements.resultSection.classList.add('active');
+    
+    let resultHTML = '';
+    
+    if (currentConversionType === 'img-to-pdf') {
+        resultHTML = `
+            <div style="text-align: center;">
+                <i class="fas fa-file-pdf" style="font-size: 4rem; color: #e74c3c; margin-bottom: 15px;"></i>
+                <h4 style="color: #2c3e50; margin-bottom: 10px;">PDF তৈরি সম্পূর্ণ!</h4>
+                <p style="color: #7f8c8d; margin-bottom: 20px;">${selectedFiles.length}টি ইমেজ থেকে PDF তৈরি হয়েছে</p>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eaeaea; max-width: 400px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: 600; color: #2c3e50;">ফাইল নাম:</span>
+                        <span style="color: #7f8c8d;">${convertedResult.name}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-weight: 600; color: #2c3e50;">ফাইল সাইজ:</span>
+                        <span style="color: #7f8c8d;">${formatFileSize(convertedResult.size)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 600; color: #2c3e50;">পৃষ্ঠা সংখ্যা:</span>
+                        <span style="color: #7f8c8d;">${selectedFiles.length}</span>
+                    </div>
                 </div>
-                <div style="background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; max-width: 300px; margin: 0 auto;">
-                    <p style="margin-bottom: 10px;"><strong>ফাইল নাম:</strong> ${convertedResult.name}</p>
-                    <p style="margin-bottom: 10px;"><strong>ফাইল সাইজ:</strong> ${formatFileSize(convertedResult.blob.size)}</p>
-                    <p><strong>পৃষ্ঠা সংখ্যা:</strong> ${selectedFiles.length}</p>
+                
+                <div style="margin-top: 25px;">
+                    <button id="previewPdf" class="btn-secondary" style="margin-right: 10px;">
+                        <i class="fas fa-eye"></i> প্রিভিউ
+                    </button>
+                    <a href="${convertedResult.url}" download="${convertedResult.name}" class="btn-success">
+                        <i class="fas fa-download"></i> ডাউনলোড
+                    </a>
+                </div>
+            </div>
+        `;
+        
+    } else if (currentConversionType === 'pdf-to-img') {
+        if (convertedResult.type === 'image') {
+            resultHTML = `
+                <div style="text-align: center;">
+                    <i class="fas fa-file-image" style="font-size: 4rem; color: #2ecc71; margin-bottom: 15px;"></i>
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;">ইমেজ কনভার্সন সম্পূর্ণ!</h4>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">PDF থেকে ইমেজ তৈরি হয়েছে</p>
+                    
+                    <div style="max-width: 300px; margin: 0 auto 20px;">
+                        <img src="${convertedResult.url}" alt="কনভার্টেড ইমেজ" style="max-width: 100%; border-radius: 10px; border: 2px solid #eaeaea;">
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eaeaea; max-width: 400px; margin: 0 auto;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-weight: 600; color: #2c3e50;">ফাইল নাম:</span>
+                            <span style="color: #7f8c8d;">${convertedResult.name}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 600; color: #2c3e50;">ফাইল সাইজ:</span>
+                            <span style="color: #7f8c8d;">${formatFileSize(convertedResult.size)}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <a href="${convertedResult.url}" download="${convertedResult.name}" class="btn-success">
+                            <i class="fas fa-download"></i> ডাউনলোড
+                        </a>
+                    </div>
                 </div>
             `;
-            
-        } else if (currentConversionType === 'pdf-to-img') {
-            // ইমেজ প্রিভিউ
-            if (convertedResult.type === 'image') {
-                resultPreview.innerHTML = `
-                    <div style="margin-bottom: 20px;">
-                        <i class="fas fa-file-image" style="font-size: 4rem; color
+        } else {
+            resultHTML = `
+                <div style="text-align: center;">
+                    <i class="fas fa-file-archive" style="font-size: 4rem; color: #f39c12; margin-bottom: 15px;"></i>
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;">ইমেজ ZIP তৈরি সম্পূর্ণ!</h4>
+                    <p style="color: #7f8c8d; margin-bottom: 20px;">PDF থেকে ${convertedResult.images.length}টি ইমেজ তৈরি হয়েছে</p>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eaeaea; max-width: 400px; margin: 0 auto;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-weight: 600; color: #2c3e50;">ফাইল নাম:</span>
+                            <span style="color: #7f8c8d;">${convertedResult.name}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-weight: 600; color: #2c3e50;">ইমেজ সংখ্যা:</span>
+                            <span style="color: #7f8c8d;">${convertedResult.images.length}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 600; color: #2c3e50;">ফরম্যাট:</span>
+                            <span style="color: #7f8c8d;">${convertedResult.images[0].format.toUpperCase()}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px;">
+                        <button id="downloadZip" class="btn-success">
+                            <i class="fas fa-download"></i> ZIP ডাউনলোড
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 20px; text-align: left;">
+                        <h5 style="color: #2c3e50; margin-bottom: 10px;">আলাদা ইমেজ ডাউনলোড:</h5>
+                        <div id="imageList" style="max-height: 150px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+                            ${convertedResult.images.map((img, i) => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eaeaea;">
+                                    <span>পৃষ্ঠা ${img.page}</span>
+                                    <a href="${img.data}" download="page-${img.page}.${img.format}" class="btn-secondary" style="padding: 5px 15px; font-size: 0.9rem;">
+                                        <i class="fas fa-download"></i> ডাউনলোড
+                                    </a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    elements.resultPreview.innerHTML = resultHTML;
+    
+    // ইভেন্ট লিসেনার যোগ
+    if (document.getElementById('previewPdf')) {
+        document.getElementById('previewPdf').addEventListener('click', () => {
+            window.open(convertedResult.url, '_blank');
+        });
+    }
+    
+    if (document.getElementById('downloadZip')) {
+        document.getElementById('downloadZip').addEventListener('click', downloadZip);
+    }
+    
+    elements.downloadBtn.style.display = 'none';
+    elements.convertBtn.disabled = false;
+    elements.convertBtn.innerHTML = '<i class="fas fa-sync-alt"></i> কনভার্ট করুন';
+    
+    showToast('কনভার্সন সফলভাবে সম্পন্ন হয়েছে!', 'success');
+}
+
+// ZIP ডাউনলোড
+async function downloadZip() {
+    if (convertedResult.type !== 'zip') return;
+    
+    showToast('ZIP ফাইল তৈরি করা হচ্ছে...', 'info');
+    
+    const zip = new JSZip();
+    
+    convertedResult.images.forEach((img, index) => {
+        const blob = dataURLToBlob(img.data);
+        zip.file(`page-${img.page}.${img.format}`, blob);
+    });
+    
+    const content = await zip.generateAsync({ type: 'blob' });
+    saveAs(content, convertedResult.name);
+    
+    showToast('ZIP ফাইল ডাউনলোড শুরু হয়েছে', 'success');
+}
+
+// ডাউনলোড রেজাল্ট
+function downloadResult() {
+    if (!convertedResult) return;
+    
+    if (convertedResult.type === 'pdf' || convertedResult.type === 'image') {
+        const link = document.createElement('a');
+        link.href = convertedResult.url;
+        link.download = convertedResult.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showToast('ফাইল ডাউনলোড শুরু হয়েছে', 'success');
+    }
+}
+
+// অ্যাপ রিসেট
+function resetApp() {
+    console.log('অ্যাপ রিসেট করা হচ্ছে...');
+    
+    // ফাইল ক্লিয়ার
+    clearAllFiles();
+    
+    // UI রিসেট
+    elements.progressSection.classList.remove('active');
+    elements.resultSection.classList.remove('active');
+    elements.downloadBtn.style.display = 'none';
+    
+    // কনভার্ট বাটন
+    elements.convertBtn.disabled = false;
+    elements.convertBtn.innerHTML = '<i class="fas fa-sync-alt"></i> কনভার্ট করুন';
+    
+    // রেজাল্ট ক্লিয়ার
+    convertedResult = null;
+    
+    // ডিফল্ট সেটিংস
+    switchConversionType('img-to-pdf');
+    
+    showToast('অ্যাপ রিসেট করা হয়েছে', 'info');
+}
+
+// UI রিসেট
+function resetConversionUI() {
+    elements.convertBtn.disabled = false;
+    elements.convertBtn.innerHTML = '<i class="fas fa-sync-alt"></i> কনভার্ট করুন';
+    elements.progressSection.classList.remove('active');
+}
+
+// হেল্প মোডাল
+function showHelpModal() {
+    elements.helpModal.style.display = 'block';
+}
+
+// প্রাইভেসি ইনফো
+function showPrivacyInfo() {
+    alert('গোপনীয়তা নোট:\n\n• সমস্ত প্রক্রিয়াকরণ আপনার ব্রাউজারে হয়\n• কোন ফাইল সার্ভারে যায় না\n• ব্রাউজার বন্ধ করলে সব ডেটা মুছে যাবে\n• ১০০% নিরাপদ এবং প্রাইভেট');
+}
+
+// হেল্পার ফাংশনস
+function loadImage(dataURL) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = dataURL;
+    });
+}
+
+function dataURLToBlob(dataURL) {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    
+    return new Blob([u8arr], { type: mime });
+}
+
+function generateFileName(prefix, extension) {
+    const date = new Date();
+    const timestamp = date.getFullYear() + 
+                     String(date.getMonth() + 1).padStart(2, '0') + 
+                     String(date.getDate()).padStart(2, '0') + 
+                     String(date.getHours()).padStart(2, '0') + 
+                     String(date.getMinutes()).padStart(2, '0');
+    
+    return `${prefix}-${timestamp}.${extension}`;
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function showToast(message, type) {
+    // সহজ টোস্ট নোটিফিকেশন
+    const toast = document.createElement('div');
+    toast.className = `toast-message ${type}`;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // স্টাইল
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#48bb78' : type === 'error' ? '#f56565' : '#4299e1'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    `;
+    
+    // অ্যানিমেশন
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // অটো রিমুভ
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+        if (style.parentNode) {
+            style.parentNode.removeChild(style);
+        }
+    }, 3000);
+}
+
+// DOM কন্টেন্ট লোড হলে অ্যাপ শুরু
+document.addEventListener('DOMContentLoaded', initApp);
