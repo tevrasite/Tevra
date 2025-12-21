@@ -56,11 +56,13 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            left: 2.5rem;
         }
 
         .logo-icon {
             font-size: 2rem;
+            left: 2.5rem;
             background: linear-gradient(135deg, white, var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -71,6 +73,7 @@
             font-weight: 900;
             font-size: 1.8rem;
             letter-spacing: -0.5px;
+            left: 15px;
         }
 
         .logo-text span {
@@ -106,9 +109,10 @@
         .menu-icon-left {
             position: fixed;
             top: 1.2rem;
-            left: 1.5rem;
+            left: 1.2rem;
             z-index: 1100;
             display: none;
+           
         }
 
         /* Side Navigation - Opens from left */
@@ -1245,5 +1249,81 @@
             document.body.classList.add('loaded');
         });
     </script>
+    
+    
+    <!-- Add this simple back system to your existing website -->
+
+<style>
+    .back-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #1a237e, #0d1b48);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        z-index: 999;
+        border: 2px solid #d4af37;
+        display: none;
+    }
+    
+    .back-notification.show {
+        display: flex;
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    .back-notification-btn {
+        background: #d4af37;
+        color: #5d4037;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    @keyframes slideUp {
+        from {
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<!-- Add this HTML before closing body tag -->
+<div class="back-notification" id="backNotification">
+    <div>আপনি অন্য ট্যাবে রয়েছেন। এই বাটনে ক্লিক করে ফিরে আসুন:</div>
+    <button class="back-notification-btn" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i> ফিরে যান
+    </button>
+</div>
+
+<script>
+    // Track when user clicks external links
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+        link.addEventListener('click', function() {
+            // Show notification after a delay (when user likely has new tab open)
+            setTimeout(() => {
+                document.getElementById('backNotification').classList.add('show');
+            }, 1000);
+        });
+    });
+    
+    // Hide notification when user clicks it
+    document.querySelector('.back-notification-btn').addEventListener('click', function() {
+        document.getElementById('backNotification').classList.remove('show');
+    });
+</script>
 </body>
 </html>
