@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovHub Portal | India & West Bengal Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0d1b48;
+            --primary: #1a237e;
+            --primary-light: #534bae;
+            --secondary: #b71c1c;
+            --accent: #00695c;
+            --gold: #d4af37;
+            --light-bg: #f8fafc;
+            --card-light: #ffffff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --card-radius: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Premium Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(13, 27, 72, 0.2);
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, white, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Mobile Menu Button (3 lines) - Positioned on left */
+        .menu-icon-left {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.5rem;
+            z-index: 1100;
+            display: none;
+        }
+
+        /* Side Navigation - Opens from left */
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: -350px;
+            width: 320px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-dark), #162a5a);
+            color: white;
+            z-index: 2000;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+            transition: left 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: flex;
+            flex-direction: column;
+            border-right: 4px solid var(--gold);
+        }
+
+        .side-nav.open {
+            left: 0;
+        }
+
+        .nav-header {
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--gold);
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .nav-links {
+            padding: 1.5rem;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .nav-link-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .nav-link-group-title {
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link-item {
+            display: block;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--gold);
+            transform: translateX(8px);
+            color: white;
+        }
+
+        .nav-footer {
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1500;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(26, 35, 126, 0.1), rgba(183, 28, 28, 0.05));
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-gray);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            font-weight: 400;
+        }
+
+        /* Priority Highlight Box */
+        .priority-highlight {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border: 2px solid var(--gold);
+            padding: 2.5rem;
+            border-radius: 18px;
+            margin-top: 3rem;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .priority-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold), #ff9800);
+        }
+
+        .priority-highlight h3 {
+            color: #b71c1c;
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .priority-highlight p {
+            color: #5d4037;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 0;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin: 4rem 0 2.5rem;
+            padding-bottom: 1rem;
+            position: relative;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 6px;
+            background: linear-gradient(to right, var(--gold), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        /* Premium Portal Cards Grid */
+        .portals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2.2rem;
+            margin-bottom: 5rem;
+        }
+
+        .portal-card {
+            background: var(--card-light);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Card Color Variants */
+        .card-1 { background: linear-gradient(145deg, #0d1b48, #1a237e); color: white; }
+        .card-2 { background: linear-gradient(145deg, #b71c1c, #d32f2f); color: white; }
+        .card-3 { background: linear-gradient(145deg, #00695c, #00897b); color: white; }
+        .card-4 { background: linear-gradient(145deg, #4a148c, #7b1fa2); color: white; }
+        .card-5 { background: linear-gradient(145deg, #1a237e, #3949ab); color: white; }
+        .card-6 { background: linear-gradient(145deg, #0d47a1, #1976d2); color: white; }
+
+        /* Card Header with Gradient */
+        .card-header {
+            height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-gradient {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.9;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.8rem;
+        }
+
+        .card-icon {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            line-height: 1.3;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 2rem;
+            flex-grow: 1;
+            background: white;
+        }
+
+        .card-description {
+            color: var(--text-gray);
+            margin-bottom: 1.8rem;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .card-link:hover {
+            background: linear-gradient(to right, var(--primary-light), var(--accent));
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.4);
+            transform: translateY(-3px);
+            gap: 15px;
+        }
+
+        /* Priority Badge */
+        .priority-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--gold), #ff9800);
+            color: #5d4037;
+            font-size: 0.85rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 800;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-dark), #162a5a);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+            border-top: 4px solid var(--gold);
+        }
+
+        .footer-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.8rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.5rem 0;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(8px);
+        }
+
+        .footer-links a i {
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        .footer-about p {
+            color: #94a3b8;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .portals-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .portals-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .menu-icon-left {
+                display: flex;
+            }
+            
+            .logo-container {
+                margin-left: 50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .portals-grid {
+                grid-template-columns: 1fr;
+                gap: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.9rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+            
+            .priority-highlight {
+                padding: 1.8rem;
+            }
+            
+            .card-header {
+                height: 140px;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .side-nav {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button (Left Side) -->
+    <div class="menu-icon-left nav-icon" id="menuIconLeft">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-landmark"></i>
+            </div>
+            <div class="logo-text">Gov<span>Hub</span></div>
+        </div>
+        <div class="nav-controls">
+            <div class="nav-icon" id="searchIcon">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="nav-icon" id="threeDots">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Navigation Menu -->
+    <div class="side-nav" id="sideNav">
+        <div class="nav-header">
+            <div class="nav-title">Portal Categories</div>
+            <div class="close-btn" id="closeNav">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="nav-links">
+            <div class="nav-link-group">
+                <div class="nav-link-group-title">
+                    <i class="fas fa-flag"></i> 🇮🇳 Central Government
+                </div>
+                <a href="#" class="nav-link-item" data-category="central">
+                    <i class="fas fa-chevron-right"></i> All Central Portals
+                </a>
+                <a href="#" class="nav-link-item" data-category="documents">
+                    <i class="fas fa-id-card"></i> Documents & IDs
+                </a>
+                <a href="#" class="nav-link-item" data-category="welfare">
+                    <i class="fas fa-hand-holding-heart"></i> Welfare Schemes
+                </a>
+                <a href="#" class="nav-link-item" data-category="finance">
+                    <i class="fas fa-rupee-sign"></i> Tax & Finance
+                </a>
+            </div>
+            <div class="nav-link-group">
+                <div class="nav-link-group-title">
+                    <i class="fas fa-university"></i> 🟢 West Bengal
+                </div>
+                <a href="#" class="nav-link-item" data-category="wb">
+                    <i class="fas fa-chevron-right"></i> All WB Portals
+                </a>
+                <a href="#" class="nav-link-item" data-category="certificates">
+                    <i class="fas fa-certificate"></i> Certificates
+                </a>
+                <a href="#" class="nav-link-item" data-category="education">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </a>
+                <a href="#" class="nav-link-item" data-category="services">
+                    <i class="fas fa-concierge-bell"></i> Public Services
+                </a>
+            </div>
+            <div class="nav-link-group">
+                <div class="nav-link-group-title">
+                    <i class="fas fa-star"></i> ⭐ Top 5 Priority
+                </div>
+                <a href="https://voters.eci.gov.in" target="_blank" class="nav-link-item">
+                    <i class="fas fa-vote-yea"></i> Voter Services (ECI)
+                </a>
+                <a href="https://wbpms.in" target="_blank" class="nav-link-item">
+                    <i class="fas fa-hands-helping"></i> WB Panchayat (WBPMS)
+                </a>
+                <a href="https://edistrict.wb.gov.in" target="_blank" class="nav-link-item">
+                    <i class="fas fa-file-certificate"></i> WB e-District
+                </a>
+                <a href="https://uidai.gov.in" target="_blank" class="nav-link-item">
+                    <i class="fas fa-fingerprint"></i> Aadhaar (UIDAI)
+                </a>
+                <a href="https://digilocker.gov.in" target="_blank" class="nav-link-item">
+                    <i class="fas fa-lock"></i> Digilocker
+                </a>
+            </div>
+        </div>
+        <div class="nav-footer">
+            <p>40+ Government Portals • Updated Dec 2025</p>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <section class="hero">
+            <h1>India & West Bengal <span>Government Portals Hub</span></h1>
+            <p>Access 40+ essential government services from one integrated platform. Premium design with intuitive navigation for all your civic needs.</p>
+            <div class="priority-highlight">
+                <h3><i class="fas fa-exclamation-circle"></i> বাস্তব কথা (Important for you)</h3>
+                <p>তোমার বর্তমান কাজ (SIR, address, certificate, voter, Aadhaar) অনুযায়ী সবচেয়ে গুরুত্বপূর্ণ ৫টা হলো: ১. Voter Services (ECI) • ২. WB Panchayat (WBPMS) • ৩. WB e-District • ৪. Aadhaar (UIDAI) • ৫. Digilocker</p>
+            </div>
+        </section>
+
+        <!-- Top 5 Priority Portals -->
+        <h2 class="section-title">⭐ Top 5 Priority Portals</h2>
+        <p class="section-subtitle">Most important for your current work (SIR, address, certificate, voter, Aadhaar)</p>
+        <div class="portals-grid" id="priorityPortals">
+            <!-- Priority cards will be dynamically inserted here -->
+        </div>
+
+        <!-- Central Government Portals -->
+        <h2 class="section-title">🇮🇳 Central Government Portals (India)</h2>
+        <p class="section-subtitle">Key national services including Aadhaar, taxation, passports, and welfare schemes</p>
+        <div class="portals-grid" id="centralPortals">
+            <!-- Central portal cards will be dynamically inserted here -->
+        </div>
+
+        <!-- West Bengal Government Portals -->
+        <h2 class="section-title">🟢 West Bengal Government Portals</h2>
+        <p class="section-subtitle">State-specific services for certificates, scholarships, utilities, and public services</p>
+        <div class="portals-grid" id="wbPortals">
+            <!-- WB portal cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Access</h3>
+                <ul class="footer-links">
+                    <li><a href="#" id="menuLinkFooter"><i class="fas fa-bars"></i> All Portals Menu</a></li>
+                    <li><a href="#priorityPortals"><i class="fas fa-star"></i> Top 5 Priority</a></li>
+                    <li><a href="#centralPortals"><i class="fas fa-flag"></i> Central Government</a></li>
+                    <li><a href="#wbPortals"><i class="fas fa-university"></i> West Bengal</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Essential Services</h3>
+                <ul class="footer-links">
+                    <li><a href="https://voters.eci.gov.in" target="_blank"><i class="fas fa-vote-yea"></i> Voter Services</a></li>
+                    <li><a href="https://uidai.gov.in" target="_blank"><i class="fas fa-fingerprint"></i> Aadhaar Services</a></li>
+                    <li><a href="https://digilocker.gov.in" target="_blank"><i class="fas fa-lock"></i> DigiLocker</a></li>
+                    <li><a href="https://edistrict.wb.gov.in" target="_blank"><i class="fas fa-file-certificate"></i> WB e-District</a></li>
+                    <li><a href="https://wbpms.in" target="_blank"><i class="fas fa-hands-helping"></i> WB Panchayat</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-about">
+                <h3>About GovHub</h3>
+                <p>GovHub is a premium aggregation platform providing quick access to 40+ government portals from India and West Bengal. All links direct to official government websites.</p>
+                <p style="margin-top: 15px;"><i class="fas fa-info-circle" style="color: var(--gold);"></i> This is a facilitation site. We do not host government services directly.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 GovHub Portal | Premium Government Services Aggregator | Designed for Citizen Convenience</p>
+        </div>
+    </footer>
+
+    <script>
+        // Portal Data - All 40+ government portals
+        const portalData = {
+            priority: [
+                {
+                    id: 1,
+                    title: "Voter Services (ECI)",
+                    url: "https://voters.eci.gov.in",
+                    description: "Electoral services for voter registration, correction, and election information.",
+                    icon: "fas fa-vote-yea",
+                    colorClass: "card-1"
+                },
+                {
+                    id: 2,
+                    title: "WB Panchayat Management",
+                    url: "https://wbpms.in",
+                    description: "West Bengal Panchayat services for rural administration and management.",
+                    icon: "fas fa-hands-helping",
+                    colorClass: "card-2"
+                },
+                {
+                    id: 3,
+                    title: "WB e-District",
+                    url: "https://edistrict.wb.gov.in",
+                    description: "West Bengal district-level online services for certificates and documents.",
+                    icon: "fas fa-file-certificate",
+                    colorClass: "card-3"
+                },
+                {
+                    id: 4,
+                    title: "Aadhaar (UIDAI)",
+                    url: "https://uidai.gov.in",
+                    description: "Unique Identification Authority of India for Aadhaar services and updates.",
+                    icon: "fas fa-fingerprint",
+                    colorClass: "card-4"
+                },
+                {
+                    id: 5,
+                    title: "DigiLocker",
+                    url: "https://digilocker.gov.in",
+                    description: "Digital document wallet for storing and sharing authentic documents.",
+                    icon: "fas fa-lock",
+                    colorClass: "card-5"
+                }
+            ],
+            central: [
+                {
+                    title: "India.gov.in",
+                    url: "https://www.india.gov.in",
+                    description: "All government services gateway for India with links to 6,700+ government websites[citation:4].",
+                    icon: "fas fa-globe-asia",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "MyGov",
+                    url: "https://www.mygov.in",
+                    description: "Citizen engagement platform for policy formulation and program implementation[citation:1][citation:2].",
+                    icon: "fas fa-users",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "MyAadhaar",
+                    url: "https://myaadhaar.uidai.gov.in",
+                    description: "Aadhaar services portal for residents with personalized access.",
+                    icon: "fas fa-id-card",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "Income Tax Portal",
+                    url: "https://www.incometax.gov.in",
+                    description: "Income tax filing, PAN, and related financial services.",
+                    icon: "fas fa-file-invoice-dollar",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "Passport Seva",
+                    url: "https://www.passportindia.gov.in",
+                    description: "Passport application, appointment, and tracking services.",
+                    icon: "fas fa-passport",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "Parivahan (DL, RC)",
+                    url: "https://parivahan.gov.in",
+                    description: "Driving license, vehicle registration, and transport services.",
+                    icon: "fas fa-car",
+                    colorClass: "card-6"
+                },
+                {
+                    title: "eShram",
+                    url: "https://eshram.gov.in",
+                    description: "Portal for unorganised workers registration and benefits.",
+                    icon: "fas fa-hard-hat",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "EPFO (PF)",
+                    url: "https://www.epfindia.gov.in",
+                    description: "Employees' Provident Fund Organization services.",
+                    icon: "fas fa-piggy-bank",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "ESIC",
+                    url: "https://www.esic.gov.in",
+                    description: "Employees' State Insurance Corporation health services.",
+                    icon: "fas fa-hospital",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "PMJAY Ayushman Bharat",
+                    url: "https://pmjay.gov.in",
+                    description: "Health insurance scheme for vulnerable families.",
+                    icon: "fas fa-heartbeat",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "PM Kisan",
+                    url: "https://pmkisan.gov.in",
+                    description: "Financial support scheme for farmers across India.",
+                    icon: "fas fa-tractor",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "PMAY (Housing)",
+                    url: "https://pmaymis.gov.in",
+                    description: "Pradhan Mantri Awas Yojana for affordable housing.",
+                    icon: "fas fa-home",
+                    colorClass: "card-6"
+                },
+                {
+                    title: "NREGA",
+                    url: "https://nrega.nic.in",
+                    description: "National Rural Employment Guarantee Act portal.",
+                    icon: "fas fa-hammer",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "National Scholarship",
+                    url: "https://scholarships.gov.in",
+                    description: "Scholarship portal for students across India.",
+                    icon: "fas fa-graduation-cap",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "Pension (NPS)",
+                    url: "https://npscra.nsdl.co.in",
+                    description: "National Pension System services and management.",
+                    icon: "fas fa-user-clock",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "eCourts",
+                    url: "https://ecourts.gov.in",
+                    description: "Court case information and services across India.",
+                    icon: "fas fa-gavel",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "Cyber Crime Reporting",
+                    url: "https://cybercrime.gov.in",
+                    description: "Portal for reporting cyber crimes and incidents.",
+                    icon: "fas fa-shield-alt",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "UMANG App / Portal",
+                    url: "https://umang.gov.in",
+                    description: "Unified Mobile Application for New-age Governance.",
+                    icon: "fas fa-mobile-alt",
+                    colorClass: "card-6"
+                }
+            ],
+            wb: [
+                {
+                    title: "WB e-District",
+                    url: "https://edistrict.wb.gov.in",
+                    description: "District-level online services for certificates and documents.",
+                    icon: "fas fa-file-contract",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "WB Panchayat (WBPMS)",
+                    url: "https://wbpms.in",
+                    description: "West Bengal Panchayat management system for rural governance.",
+                    icon: "fas fa-hands-helping",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "Duare Sarkar",
+                    url: "https://ds.wb.gov.in",
+                    description: "West Bengal government services at your doorstep.",
+                    icon: "fas fa-home",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "Banglar Bhumi",
+                    url: "https://banglarbhumi.gov.in",
+                    description: "Land records and property information for West Bengal.",
+                    icon: "fas fa-map-marked-alt",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "Khadya Sathi",
+                    url: "https://food.wb.gov.in",
+                    description: "Ration card and public distribution system services.",
+                    icon: "fas fa-utensils",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "West Bengal Health",
+                    url: "https://www.wbhealth.gov.in",
+                    description: "State health department information and services.",
+                    icon: "fas fa-stethoscope",
+                    colorClass: "card-6"
+                },
+                {
+                    title: "Swasthya Sathi",
+                    url: "https://swasthyasathi.gov.in",
+                    description: "West Bengal health insurance scheme for families.",
+                    icon: "fas fa-hospital",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "Kanyashree",
+                    url: "https://kanyashree.wb.gov.in",
+                    description: "Scholarship scheme for girls in West Bengal.",
+                    icon: "fas fa-female",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "Oikyashree Scholarship",
+                    url: "https://wbmdfcscholarship.gov.in",
+                    description: "Minority scholarship scheme for West Bengal students.",
+                    icon: "fas fa-book-reader",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "Student Credit Card (WB)",
+                    url: "https://wbstudentcreditcard.wb.gov.in",
+                    description: "Education loan scheme for West Bengal students.",
+                    icon: "fas fa-credit-card",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "WB Transport",
+                    url: "https://wbtransport.gov.in",
+                    description: "Transport department services for West Bengal.",
+                    icon: "fas fa-bus",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "WB Police",
+                    url: "https://wbpolice.gov.in",
+                    description: "West Bengal Police services and information.",
+                    icon: "fas fa-shield-alt",
+                    colorClass: "card-6"
+                },
+                {
+                    title: "WB Electricity (WBSEDCL)",
+                    url: "https://www.wbsedcl.in",
+                    description: "Electricity services and bill payments for West Bengal.",
+                    icon: "fas fa-bolt",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "WB Urban Services",
+                    url: "https://www.wburbanservices.gov.in",
+                    description: "Municipality and urban development services.",
+                    icon: "fas fa-city",
+                    colorClass: "card-2"
+                },
+                {
+                    title: "Labour Department WB",
+                    url: "https://wblabour.gov.in",
+                    description: "State labor department services and information.",
+                    icon: "fas fa-briefcase",
+                    colorClass: "card-3"
+                },
+                {
+                    title: "Social Welfare WB",
+                    url: "https://wbcdwds.gov.in",
+                    description: "Social welfare and development services.",
+                    icon: "fas fa-hands",
+                    colorClass: "card-4"
+                },
+                {
+                    title: "Employment Bank WB",
+                    url: "https://employmentbankwb.gov.in",
+                    description: "Job portal and employment services for West Bengal.",
+                    icon: "fas fa-briefcase",
+                    colorClass: "card-5"
+                },
+                {
+                    title: "WB Caste Certificate",
+                    url: "https://castcertificatewb.gov.in",
+                    description: "Caste certificate services for West Bengal residents.",
+                    icon: "fas fa-file-certificate",
+                    colorClass: "card-6"
+                },
+                {
+                    title: "WB Income Certificate",
+                    url: "https://edistrict.wb.gov.in",
+                    description: "Income certificate and domicile services.",
+                    icon: "fas fa-file-invoice-dollar",
+                    colorClass: "card-1"
+                },
+                {
+                    title: "WB Grievance Portal",
+                    url: "https://www.wb.gov.in",
+                    description: "West Bengal government grievance redressal system.",
+                    icon: "fas fa-comment-dots",
+                    colorClass: "card-2"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const menuIconLeft = document.getElementById('menuIconLeft');
+        const closeNav = document.getElementById('closeNav');
+        const sideNav = document.getElementById('sideNav');
+        const overlay = document.getElementById('overlay');
+        const priorityPortalsContainer = document.getElementById('priorityPortals');
+        const centralPortalsContainer = document.getElementById('centralPortals');
+        const wbPortalsContainer = document.getElementById('wbPortals');
+
+        // Function to create portal card HTML
+        function createPortalCard(portal, isPriority = false) {
+            return `
+                <div class="portal-card">
+                    <div class="card-header ${portal.colorClass}">
+                        <div class="card-gradient ${portal.colorClass}"></div>
+                        <div class="card-overlay">
+                            <div class="card-icon">
+                                <i class="${portal.icon}"></i>
+                            </div>
+                            <h3 class="card-title">${portal.title}</h3>
+                        </div>
+                        ${isPriority ? `<div class="priority-badge"><i class="fas fa-star"></i> Top ${portal.id}</div>` : ''}
+                    </div>
+                    <div class="card-body">
+                        <p class="card-description">${portal.description}</p>
+                        <a href="${portal.url}" target="_blank" class="card-link">
+                            Access Portal <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render portal cards
+        function renderPortals() {
+            // Render priority portals
+            portalData.priority.forEach(portal => {
+                priorityPortalsContainer.innerHTML += createPortalCard(portal, true);
+            });
+
+            // Render central portals
+            portalData.central.forEach(portal => {
+                centralPortalsContainer.innerHTML += createPortalCard(portal);
+            });
+
+            // Render WB portals
+            portalData.wb.forEach(portal => {
+                wbPortalsContainer.innerHTML += createPortalCard(portal);
+            });
+        }
+
+        // Event Listeners
+        menuIconLeft.addEventListener('click', () => {
+            sideNav.classList.add('open');
+            overlay.classList.add('active');
+        });
+
+        closeNav.addEventListener('click', () => {
+            sideNav.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sideNav.classList.remove('open');
+            overlay.classList.remove('active');
+        });
+
+        // Search icon functionality
+        document.getElementById('searchIcon').addEventListener('click', () => {
+            alert('Search feature: Type to find specific government portals. (Demo functionality)');
+        });
+
+        // Three dots functionality
+        document.getElementById('threeDots').addEventListener('click', () => {
+            alert('Additional options: Settings, Theme, Feedback. (Demo functionality)');
+        });
+
+        // Footer navigation links
+        document.getElementById('menuLinkFooter').addEventListener('click', (e) => {
+            e.preventDefault();
+            sideNav.classList.add('open');
+            overlay.classList.add('active');
+        });
+
+        // Smooth scroll to sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Initialize the portal rendering
+        document.addEventListener('DOMContentLoaded', renderPortals);
+        
+        // Add a loaded class for fade-in animation
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>
