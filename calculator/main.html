@@ -13,77 +13,340 @@
     }
 
     body {
-      background: #007acc;
+      background: #0f172a;
       padding: 20px;
       margin-top: 0mm;
+      transition: all 0.5s ease;
+      min-height: 100vh;
     }
 
-    h1 {
-      text-align: center;
+    /* Light Mode Styles */
+    body.light-mode {
+      background: #f1f5f9;
+      --text-color: #0f172a;
+      --card-bg: #ffffff;
+      --menu-bg: #ffffff;
+      --menu-text: #0f172a;
+      --selection-info-bg: #e2e8f0;
+      --section-bg: #ffffff;
+      --border-color: rgba(99, 102, 241, 0.1);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --ad-bg: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      --footer-bg: #0f172a;
+      --footer-text: #f0f9ff;
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --header-border: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: #0f172a;
+      --text-color: #f0f9ff;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --menu-bg: rgba(15, 23, 42, 0.95);
+      --menu-text: #f0f9ff;
+      --selection-info-bg: rgba(30, 41, 59, 0.5);
+      --section-bg: rgba(30, 41, 59, 0.3);
+      --border-color: rgba(99, 102, 241, 0.3);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --ad-bg: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+      --footer-bg: rgba(15, 23, 42, 0.95);
+      --footer-text: #f0f9ff;
+      --header-bg: rgba(15, 23, 42, 0.95);
+      --header-border: rgba(99, 102, 241, 0.3);
+    }
+
+    /* হেডার বার স্টাইল - বিকল্প ১ */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--header-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--header-border);
+      border-radius: 50px;
+      padding: 15px 25px;
       margin-bottom: 25px;
-      color: #fff;
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 1.4);
-      padding: 15px 30px;
-      border: 3px solid;
-      border-image: linear-gradient(45deg, #ff8a00, #e52e71, #3a7bd5, #00d2ff);
-      border-image-slice: 1;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-      animation: colorChange 5s infinite alternate, pulse 2s infinite ease-in-out;
-      display: inline-block;
+      box-shadow: 0 6px 20px var(--shadow-color);
       position: relative;
+      z-index: 10;
+    }
+
+    .header-left, .header-center, .header-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .header-center {
+      justify-content: center;
+    }
+
+    .header-right {
+      justify-content: flex-end;
+    }
+
+    .header-btn {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 10px 20px;
+      color: var(--text-color);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .header-btn i {
+      font-size: 1.1rem;
+    }
+
+    .logo-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-header i {
+      font-size: 2.2rem;
+    }
+
+    .logo-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0;
+      border: none;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: none;
+      transform: none;
+      position: static;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    /* মিনিমাল মেনু স্টাইল */
+    .minimal-menu {
+      position: fixed;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%) scale(0.9);
+      background: var(--menu-bg);
+      backdrop-filter: blur(30px);
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
     }
 
-    @keyframes colorChange {
-      0% {
-        background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-        border-image: linear-gradient(45deg, #ff8a00, #e52e71, #3a7bd5, #00d2ff);
-        border-image-slice: 1;
-      }
-      25% {
-        background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-        border-image: linear-gradient(45deg, #e52e71, #3a7bd5, #00d2ff, #ff8a00);
-        border-image-slice: 1;
-      }
-      50% {
-        background: linear-gradient(135deg, #3494E6, #EC6EAD);
-        border-image: linear-gradient(45deg, #3a7bd5, #00d2ff, #ff8a00, #e52e71);
-        border-image-slice: 1;
-      }
-      75% {
-        background: linear-gradient(135deg, #EC6EAD, #3494E6);
-        border-image: linear-gradient(45deg, #00d2ff, #ff8a00, #e52e71, #3a7bd5);
-        border-image-slice: 1;
-      }
-      100% {
-        background: linear-gradient(135deg, #ff8a00, #e52e71);
-        border-image: linear-gradient(45deg, #ff8a00, #e52e71, #3a7bd5, #00d2ff);
-        border-image-slice: 1;
-      }
+    .minimal-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    @keyframes pulse {
-      0% {
-        transform: translateX(-50%) scale(1);
-      }
-      50% {
-        transform: translateX(-50%) scale(1.05);
-      }
-      100% {
-        transform: translateX(-50%) scale(1);
-      }
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      border-bottom: 1px solid var(--border-color);
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(6, 182, 212, 0.1));
     }
 
+    .menu-header h3 {
+      color: var(--menu-text);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-header h3 i {
+      color: #0ea5e9;
+    }
+
+    .close-menu {
+      background: none;
+      border: none;
+      color: var(--menu-text);
+      font-size: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .close-menu:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      transform: rotate(90deg);
+    }
+
+    .menu-content {
+      padding: 25px;
+    }
+
+    .menu-section {
+      margin-bottom: 25px;
+    }
+
+    .menu-section h4 {
+      color: var(--menu-text);
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-section h4 i {
+      color: #0ea5e9;
+    }
+
+    .menu-info {
+      background: var(--selection-info-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .menu-info p {
+      color: var(--menu-text);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-info i {
+      color: #0ea5e9;
+      font-size: 1rem;
+    }
+
+    .menu-action-btn {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: var(--menu-text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+    }
+
+    .menu-action-btn:hover {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(6, 182, 212, 0.2));
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.2);
+    }
+
+    .menu-action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .menu-action-btn.danger {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .menu-action-btn.danger:hover {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .menu-action-btn i {
+      font-size: 1.2rem;
+      width: 25px;
+      text-align: center;
+    }
+
+    .menu-footer {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .menu-footer p {
+      color: var(--menu-text);
+      font-size: 0.9rem;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .menu-footer i {
+      color: #0ea5e9;
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Card Section */
     .card-section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
+      gap: 15px;
       justify-items: center;
+      margin-top: 20px;
     }
 
     .card-item {
@@ -101,28 +364,30 @@
 
     .card {
       position: relative;
-      width: 100px;
-      height: 100px;
+      width: 110px;
+      height: 110px;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,1.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       background-size: cover;
       background-position: center;
       margin: 0 auto;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
     }
 
     .card:hover {
       transform: scale(1.08);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
     .card-title {
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 0.95rem;
       font-weight: 600;
-      color: white;
+      color: var(--text-color);
     }
 
     /* সিলেকশন স্টাইল */
@@ -157,293 +422,739 @@
       pointer-events: none;
     }
 
-    /* থ্রি-ডট মেনু ডান পাশে */
-.menu-btn-right {
-  position: absolute;
-  margin-top: 0mm;
-  right: 20px;                 /* ডান দিক থেকে দূরত্ব */
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  z-index: 1000;
-}
+    /* Banner Ad Section */
+    .banner-ad-section {
+      margin: 35px 0;
+      width: 100%;
+    }
 
-.menu-btn-right:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
-}
+    .banner-ad-container {
+      background: var(--ad-bg);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      border: 2px dashed var(--border-color);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 25px var(--shadow-color);
+    }
 
-    .menu-overlay {
-      position: fixed;
+    .banner-ad-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px var(--shadow-color);
+    }
+
+    .ad-label {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .banner-ad-title {
+      color: var(--text-color);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner-ad-content {
+      color: var(--text-color);
+      opacity: 0.9;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .banner-ad-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      color: white;
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+      font-size: 1.1rem;
+    }
+
+    .banner-ad-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+    }
+
+    .ad-dimensions {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
+      margin-top: 20px;
+      font-style: italic;
+    }
+
+    /* Footer Section */
+    .footer-section {
+      margin-top: 50px;
+      background: var(--footer-bg);
+      border-radius: 25px;
+      padding: 40px 30px;
+      color: var(--footer-text);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .footer-section::before {
+      content: '';
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 999;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
     }
 
-    .menu-window {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      min-width: 300px;
-      display: none;
-      z-index: 1000;
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
-    .menu-window h2 {
-      color: #007acc;
+    .footer-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-logo {
+      font-size: 2rem;
+      font-weight: 800;
       margin-bottom: 20px;
-      text-align: center;
-      font-size: 1.5rem;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .menu-btn-simple {
-      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+    .footer-logo i {
+      font-size: 2.5rem;
+    }
+
+    .footer-description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .footer-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
       color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin: 10px 0;
-      width: 100%;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .footer-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      border-radius: 2px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links li {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-links a {
+      color: var(--footer-text);
+      text-decoration: none;
       transition: all 0.3s ease;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .menu-btn-simple:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    .footer-links a:hover {
+      color: #0ea5e9;
+      transform: translateX(5px);
+      opacity: 1;
     }
 
-    .menu-btn-simple:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .selection-info {
-      color: #007acc;
-      text-align: center;
-      margin: 15px 0;
+    .footer-links i {
+      color: #0ea5e9;
       font-size: 1rem;
-      font-weight: 600;
-      min-height: 40px;
-      padding: 10px;
-      background: #f0f8ff;
-      border-radius: 5px;
+      width: 20px;
     }
 
-    @media (max-width: 480px) {
+    .social-links {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-icon {
+      width: 45px;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-icon:hover {
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      transform: translateY(-3px);
+    }
+
+    .copyright {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .header-bar {
+        padding: 12px 20px;
+        border-radius: 40px;
+      }
+      
+      .logo-header h1 {
+        font-size: 1.7rem;
+      }
+      
+      .header-btn span {
+        display: none;
+      }
+      
+      .header-btn {
+        padding: 10px;
+        width: 45px;
+        height: 45px;
+        justify-content: center;
+      }
+      
       .card {
         width: 100px;
         height: 100px;
       }
+      
       .card-title {
         font-size: 0.85rem;
       }
-      h1 {
-        font-size: 1.8rem;
-        padding: 10px 20px;
-      }
-      .menu-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-        top: 10px;
-        left: 10px;
-      }
-      .menu-window {
-        min-width: 280px;
+      
+      .banner-ad-container {
         padding: 20px;
       }
+      
+      .banner-ad-title {
+        font-size: 1.5rem;
+      }
+      
+      .banner-ad-content {
+        font-size: 1rem;
+      }
+      
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      
+      .footer-section {
+        padding: 30px 20px;
+      }
     }
-    
-    .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: white;
-            font-size: 1rem;
-            opacity: 0.9;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
+
+    @media (max-width: 480px) {
+      .header-bar {
+        padding: 10px 15px;
+      }
+      
+      .logo-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .logo-header i {
+        font-size: 1.8rem;
+      }
+      
+      .card-section {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      
+      .card {
+        width: 90px;
+        height: 90px;
+      }
+      
+      .banner-ad-title {
+        font-size: 1.3rem;
+      }
+      
+      .banner-ad-cta {
+        padding: 12px 25px;
+        font-size: 1rem;
+      }
+      
+      .footer-logo {
+        font-size: 1.7rem;
+      }
+      
+      .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+      }
+      
+      .minimal-menu {
+        width: 95%;
+      }
+    }
   </style>
 </head>
-<body>
-  <!-- থ্রি-ডট মেনু বাটন ডান পাশে -->
-<button class="menu-btn-right" id="menuBtn">⋯</button>
-
+<body class="dark-mode">
   <!-- মেনু ওভারলে -->
   <div class="menu-overlay" id="menuOverlay"></div>
 
-  <!-- মেনু উইন্ডো -->
-  <div class="menu-window" id="menuWindow">
-    <h2>Card Setting</h2>
-    
-    <div class="selection-info" id="selectionInfo">
-      Click on a card to select ✅
+  <!-- মিনিমাল মেনু -->
+  <div class="minimal-menu" id="menuWindow">
+    <div class="menu-header">
+      <h3><i class="fas fa-cog"></i> সেটিংস</h3>
+      <button class="close-menu" id="closeMenuBtn">×</button>
     </div>
     
-    <button class="menu-btn-simple" id="startSelectionBtn">Card Select</button>
-    <button class="menu-btn-simple" id="swapBtn" disabled> Card Position Change</button>
-    <button class="menu-btn-simple" id="resetBtn">Reset</button>
-    
-    <div style="margin-top: 20px; text-align: center; color: #666; font-size: 0.9rem;">
-      The positions of the selected cards are saved automatically
+    <div class="menu-content">
+      <div class="menu-section">
+        <h4><i class="fas fa-layer-group"></i> কার্ড ব্যবস্থাপনা</h4>
+        <div class="menu-info">
+          <p><i class="fas fa-info-circle"></i> কার্ড সিলেক্ট করে পজিশন পরিবর্তন করুন</p>
+        </div>
+        
+        <button class="menu-action-btn" id="startSelectionBtn">
+          <i class="fas fa-mouse-pointer"></i>
+          <span>কার্ড সিলেক্ট মোড</span>
+        </button>
+        
+        <button class="menu-action-btn" id="swapBtn" disabled>
+          <i class="fas fa-exchange-alt"></i>
+          <span>পজিশন পরিবর্তন করুন</span>
+        </button>
+        
+        <button class="menu-action-btn danger" id="resetBtn">
+          <i class="fas fa-redo"></i>
+          <span>ডিফল্টে রিসেট</span>
+        </button>
+      </div>
+      
+      <div class="menu-footer">
+        <p><i class="fas fa-save"></i> পজিশন স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়</p>
+      </div>
     </div>
   </div>
 
-  <h1>www.tevra.in</h1>
-
-  <div class="card-section" id="cardContainer">
-    <div class="card-item" data-id="basic-calculator">
-      <a href="basic-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/besic_calcluter.png');"></div>
-        <div class="card-title">Basic Calculator</div>
-      </a>
-    </div>
-    <div class="card-item" data-id="right-angle">
-      <a href="right-angle.html" class="card-link">
-        <div class="card" style="background-image: url('image/right-angle.png');"></div>
-        <div class="card-title"> Right Angle</div>
-      </a>
-    </div>
-    <div class="card-item" data-id="financial-calculator">
-      <a href="financial-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/financial-calculato_3.jpg');"></div>
-        <div class="card-title"> Financial Calculator</div>
-      </a>
-    </div>
-    <div class="card-item" data-id="scientific-calculator">
-      <a href="scientific-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/Scientific-Calculator2.jpg');"></div>
-        <div class="card-title">Scientific Calculator</div>
-      </a>
+  <!-- হেডার বার -->
+  <div class="header-bar">
+    <div class="header-left">
+      <button class="header-btn" id="menuBtn">
+        <i class="fas fa-sliders-h"></i>
+        <span>সেটিংস</span>
+      </button>
     </div>
     
-    <div class="card-item" data-id="bmi-calculator">
-      <a href="bmi-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/bmi_calculator.jpg');"></div>
-        <div class="card-title">BMI Calculator</div>
-      </a>
+    <div class="header-center">
+      <div class="logo-header">
+        <i class="fas fa-infinity"></i>
+        <h1>www.tevra.in</h1>
+      </div>
     </div>
     
-    <div class="card-item" data-id="age-calculator">
-      <a href="age-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/CalcPro_age.jpg');"></div>
-        <div class="card-title">Age Calculator</div>
-      </a>
+    <div class="header-right">
+      <button class="header-btn" id="themeToggle">
+        <i class="fas fa-moon"></i>
+        <span>থিম</span>
+      </button>
     </div>
-    
-    <div class="card-item" data-id="unit-converter">
-      <a href="unit-converter.html" class="card-link">
-        <div class="card" style="background-image: url('image/Unit_Converter.jpg');"></div>
-        <div class="card-title">Unit Converter </div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="currency-converter">
-      <a href="currency-converter.html" class="card-link">
-        <div class="card" style="background-image: url('image/Currency_Converte.jpg');"></div>
-        <div class="card-title">Currency Converter</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="percentage-converter">
-      <a href="percentage-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/percentage_calculator.jpg');"></div>
-        <div class="card-title">Percentage Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="loan-calculato">
-      <a href="loan-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/premium loan calculator.jpg');"></div>
-        <div class="card-title">Loan Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="tax-calculato">
-      <a href="tax-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/TaxPro_a_sophis_1.jpg');"></div>
-        <div class="card-title">Tax Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="date-calculator">
-      <a href="date-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/DatePro_a_sophi_1.jpg');"></div>
-        <div class="card-title">Date Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="gpa-calculator">
-      <a href="gpa-calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/GPA_Pro_a_sophi_0.jpg');"></div>
-        <div class="card-title">GPA Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="concrete_calculator">
-      <a href="concrete_calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/concrete_calculator.jpg');"></div>
-        <div class="card-title">Concrete Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="Area_Calculator">
-      <a href="Area_Calculator.html" class="card-link">
-        <div class="card" style="background-image: url('image/Area_Calculator.jpg');"></div>
-        <div class="card-title">Area Calculator</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="AutoCAD_Area">
-      <a href="AutoCAD_Area.html" class="card-link">
-        <div class="card" style="background-image: url('image/AutoCAD_Area.jpg');"></div>
-        <div class="card-title">AutoCAD Area</div>
-      </a>
-    </div>
-    
-    <div class="card-item" data-id="Meter_to_Feet_Converter">
-      <a href="Meter_to_Feet_Converter.html" class="card-link">
-        <div class="card" style="background-image: url('image/Meter_to_Feet_Converter.jpg');"></div>
-        <div class="card-title">Meter to Feet Converter</div>
-      </a>
-    </div>
-    
   </div>
-  
-  <div class="footer">
-        <p>www.tevra.in CalcPro Premium Percentage Calculator | &copy; 2023</p>
+
+  <div class="container">
+    <!-- Banner Ad Section -->
+    <section class="banner-ad-section">
+      <div class="banner-ad-container">
+        <div class="ad-label">বিজ্ঞাপন</div>
+        <h2 class="banner-ad-title">প্রিমিয়াম ক্যালকুলেটর অ্যাপস</h2>
+        <p class="banner-ad-content">
+          আমাদের প্রিমিয়াম ক্যালকুলেটর অ্যাপস ডাউনলোড করুন এবং সকল ধরনের গণনার জন্য একক সমাধান পান। 
+          বিজ্ঞানসম্মত ক্যালকুলেশন থেকে শুরু করে আর্থিক হিসাবনিকাশ সবই আপনার হাতের মুঠোয়।
+        </p>
+        <a href="#" class="banner-ad-cta">
+          <i class="fas fa-download"></i> এখনই ডাউনলোড করুন
+        </a>
+        <p class="ad-dimensions">ব্যানার সাইজ: 728×90 বা 300×250</p>
+      </div>
+    </section>
+
+    <!-- Card Section -->
+    <div class="card-section" id="cardContainer">
+      <div class="card-item" data-id="basic-calculator">
+        <a href="basic-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/besic_calcluter.png'); background-color: rgba(14, 165, 233, 0.1);"></div>
+          <div class="card-title">বেসিক ক্যালকুলেটর</div>
+        </a>
+      </div>
+      <div class="card-item" data-id="right-angle">
+        <a href="right-angle.html" class="card-link">
+          <div class="card" style="background-image: url('image/right-angle.png'); background-color: rgba(6, 182, 212, 0.1);"></div>
+          <div class="card-title">সমকোণ ক্যালকুলেটর</div>
+        </a>
+      </div>
+      <div class="card-item" data-id="financial-calculator">
+        <a href="financial-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/financial-calculato_3.jpg'); background-color: rgba(239, 68, 68, 0.1);"></div>
+          <div class="card-title">আর্থিক ক্যালকুলেটর</div>
+        </a>
+      </div>
+      <div class="card-item" data-id="scientific-calculator">
+        <a href="scientific-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/Scientific-Calculator2.jpg'); background-color: rgba(139, 92, 246, 0.1);"></div>
+          <div class="card-title">বৈজ্ঞানিক ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="bmi-calculator">
+        <a href="bmi-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/bmi_calculator.jpg'); background-color: rgba(34, 197, 94, 0.1);"></div>
+          <div class="card-title">বিএমআই ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="age-calculator">
+        <a href="age-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/CalcPro_age.jpg'); background-color: rgba(245, 158, 11, 0.1);"></div>
+          <div class="card-title">বয়স ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="unit-converter">
+        <a href="unit-converter.html" class="card-link">
+          <div class="card" style="background-image: url('image/Unit_Converter.jpg'); background-color: rgba(59, 130, 246, 0.1);"></div>
+          <div class="card-title">ইউনিট কনভার্টার</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="currency-converter">
+        <a href="currency-converter.html" class="card-link">
+          <div class="card" style="background-image: url('image/Currency_Converte.jpg'); background-color: rgba(16, 185, 129, 0.1);"></div>
+          <div class="card-title">মুদ্রা কনভার্টার</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="percentage-converter">
+        <a href="percentage-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/percentage_calculator.jpg'); background-color: rgba(168, 85, 247, 0.1);"></div>
+          <div class="card-title">শতাংশ ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="loan-calculato">
+        <a href="loan-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/premium loan calculator.jpg'); background-color: rgba(236, 72, 153, 0.1);"></div>
+          <div class="card-title">লোন ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="tax-calculato">
+        <a href="tax-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/TaxPro_a_sophis_1.jpg'); background-color: rgba(6, 182, 212, 0.1);"></div>
+          <div class="card-title">ট্যাক্স ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="date-calculator">
+        <a href="date-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/DatePro_a_sophi_1.jpg'); background-color: rgba(249, 115, 22, 0.1);"></div>
+          <div class="card-title">তারিখ ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="gpa-calculator">
+        <a href="gpa-calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/GPA_Pro_a_sophi_0.jpg'); background-color: rgba(139, 92, 246, 0.1);"></div>
+          <div class="card-title">জিপিএ ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="concrete_calculator">
+        <a href="concrete_calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/concrete_calculator.jpg'); background-color: rgba(59, 130, 246, 0.1);"></div>
+          <div class="card-title">কংক্রিট ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="Area_Calculator">
+        <a href="Area_Calculator.html" class="card-link">
+          <div class="card" style="background-image: url('image/Area_Calculator.jpg'); background-color: rgba(34, 197, 94, 0.1);"></div>
+          <div class="card-title">এলাকা ক্যালকুলেটর</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="AutoCAD_Area">
+        <a href="AutoCAD_Area.html" class="card-link">
+          <div class="card" style="background-image: url('image/AutoCAD_Area.jpg'); background-color: rgba(245, 158, 11, 0.1);"></div>
+          <div class="card-title">অটোক্যাড এরিয়া</div>
+        </a>
+      </div>
+      
+      <div class="card-item" data-id="Meter_to_Feet_Converter">
+        <a href="Meter_to_Feet_Converter.html" class="card-link">
+          <div class="card" style="background-image: url('image/Meter_to_Feet_Converter.jpg'); background-color: rgba(239, 68, 68, 0.1);"></div>
+          <div class="card-title">মিটার থেকে ফুট কনভার্টার</div>
+        </a>
+      </div>
     </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div class="footer-column">
+        <div class="footer-logo">
+          <i class="fas fa-infinity"></i>
+          CalcMaster
+        </div>
+        <p class="footer-description">
+          সব ধরনের ক্যালকুলেশনের জন্য আপনার একক সমাধান। বেসিক গণনা থেকে শুরু করে উন্নত বৈজ্ঞানিক গণনা পর্যন্ত, সবই আপনার প্রয়োজনে।
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-icon">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-icon">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="social-icon">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="social-icon">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="footer-column">
+        <h3 class="footer-title">ক্যালকুলেটর</h3>
+        <ul class="footer-links">
+          <li><a href="basic-calculator.html"><i class="fas fa-calculator"></i>বেসিক ক্যালকুলেটর</a></li>
+          <li><a href="scientific-calculator.html"><i class="fas fa-flask"></i>বৈজ্ঞানিক ক্যালকুলেটর</a></li>
+          <li><a href="percentage-calculator.html"><i class="fas fa-percentage"></i>শতাংশ ক্যালকুলেটর</a></li>
+          <li><a href="currency-converter.html"><i class="fas fa-money-bill-wave"></i>মুদ্রা কনভার্টার</a></li>
+          <li><a href="unit-converter.html"><i class="fas fa-ruler-combined"></i>ইউনিট কনভার্টার</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3 class="footer-title">লিংকসমূহ</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-home"></i>হোম</a></li>
+          <li><a href="#"><i class="fas fa-info-circle"></i>আমাদের সম্পর্কে</a></li>
+          <li><a href="#"><i class="fas fa-envelope"></i>যোগাযোগ</a></li>
+          <li><a href="#"><i class="fas fa-shield-alt"></i>গোপনীয়তা নীতি</a></li>
+          <li><a href="#"><i class="fas fa-file-contract"></i>সেবার শর্তাবলী</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column">
+        <h3 class="footer-title">যোগাযোগ</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-map-marker-alt"></i>ঢাকা, বাংলাদেশ</a></li>
+          <li><a href="mailto:info@tevra.in"><i class="fas fa-envelope"></i>info@tevra.in</a></li>
+          <li><a href="tel:+8801234567890"><i class="fas fa-phone"></i>+880 1234 567890</a></li>
+          <li><a href="#"><i class="fas fa-globe"></i>www.tevra.in</a></li>
+          <li><a href="#"><i class="fas fa-clock"></i>২৪/৭ সেবা</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; ২০২৪ www.tevra.in CalcMaster | সকল অধিকার সংরক্ষিত</p>
+      <p style="margin-top: 5px; font-size: 0.85rem;">Design with ❤️ by Tevra Team</p>
+    </div>
+  </footer>
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <script>
+    // Theme synchronization with parent iframe
+    function syncTheme() {
+      try {
+        const isLightMode = window.parent.document.body.classList.contains('light-mode');
+        
+        if (isLightMode) {
+          document.body.classList.remove('dark-mode');
+          document.body.classList.add('light-mode');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>থিম</span>';
+        } else {
+          document.body.classList.remove('light-mode');
+          document.body.classList.add('dark-mode');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>থিম</span>';
+        }
+      } catch (e) {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+          document.body.classList.remove('dark-mode');
+          document.body.classList.add('light-mode');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>থিম</span>';
+        } else {
+          document.body.classList.remove('light-mode');
+          document.body.classList.add('dark-mode');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>থিম</span>';
+        }
+      }
+    }
+
+    // Listen for theme changes from parent
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'THEME_CHANGE') {
+        if (event.data.theme === 'light') {
+          document.body.classList.remove('dark-mode');
+          document.body.classList.add('light-mode');
+          localStorage.setItem('theme', 'light');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>থিম</span>';
+        } else {
+          document.body.classList.remove('light-mode');
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>থিম</span>';
+        }
+      }
+      
+      if (event.data && event.data.type === 'THEME_INFO') {
+        if (event.data.theme === 'light') {
+          document.body.classList.remove('dark-mode');
+          document.body.classList.add('light-mode');
+          localStorage.setItem('theme', 'light');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>থিম</span>';
+        } else {
+          document.body.classList.remove('light-mode');
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+          document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>থিম</span>';
+        }
+      }
+    });
+
+    // Request theme info from parent on load
+    window.addEventListener('load', function() {
+      syncTheme();
+      
+      try {
+        window.parent.postMessage({
+          type: 'REQUEST_THEME'
+        }, '*');
+      } catch (e) {
+        console.log('Could not request theme from parent');
+      }
+    });
+
+    // Menu functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuBtn = document.getElementById('menuBtn');
+      const menuWindow = document.getElementById('menuWindow');
+      const menuOverlay = document.getElementById('menuOverlay');
+      const closeMenuBtn = document.getElementById('closeMenuBtn');
+      const themeToggle = document.getElementById('themeToggle');
+      
+      // Open menu
+      menuBtn.addEventListener('click', function() {
+        menuWindow.classList.add('active');
+        menuOverlay.classList.add('active');
+      });
+      
+      // Close menu
+      function closeMenu() {
+        menuWindow.classList.remove('active');
+        menuOverlay.classList.remove('active');
+      }
+      
+      closeMenuBtn.addEventListener('click', closeMenu);
+      menuOverlay.addEventListener('click', closeMenu);
+      
+      // Theme toggle for this page only
+      themeToggle.addEventListener('click', function() {
+        if (document.body.classList.contains('light-mode')) {
+          document.body.classList.remove('light-mode');
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+          this.innerHTML = '<i class="fas fa-moon"></i><span>থিম</span>';
+          
+          // Notify parent
+          try {
+            window.parent.postMessage({
+              type: 'THEME_CHANGE',
+              theme: 'dark'
+            }, '*');
+          } catch (e) {}
+        } else {
+          document.body.classList.remove('dark-mode');
+          document.body.classList.add('light-mode');
+          localStorage.setItem('theme', 'light');
+          this.innerHTML = '<i class="fas fa-sun"></i><span>থিম</span>';
+          
+          // Notify parent
+          try {
+            window.parent.postMessage({
+              type: 'THEME_CHANGE',
+              theme: 'light'
+            }, '*');
+          } catch (e) {}
+        }
+      });
+    });
+
+    // Card management functionality
     document.addEventListener('DOMContentLoaded', function() {
       const cardContainer = document.getElementById('cardContainer');
-      const menuBtn = document.getElementById('menuBtn');
-      const menuOverlay = document.getElementById('menuOverlay');
-      const menuWindow = document.getElementById('menuWindow');
       const startSelectionBtn = document.getElementById('startSelectionBtn');
       const swapBtn = document.getElementById('swapBtn');
       const resetBtn = document.getElementById('resetBtn');
-      const selectionInfo = document.getElementById('selectionInfo');
       
       let selectedCards = [];
       let isSelectionMode = false;
@@ -451,20 +1162,9 @@
       // Load card positions from local storage
       loadCardPositions();
       
-      // Menu button click
-      menuBtn.addEventListener('click', function() {
-        openMenu();
-      });
-      
-      // Overlay click
-      menuOverlay.addEventListener('click', function() {
-        closeMenu();
-      });
-      
       // Start selection
       startSelectionBtn.addEventListener('click', function() {
         startSelectionMode();
-        closeMenu();
       });
       
       // Swap card positions
@@ -472,40 +1172,23 @@
         if (selectedCards.length === 2) {
           swapCardPositions(selectedCards[0], selectedCards[1]);
           endSelectionMode();
-          closeMenu();
         }
       });
       
       // Reset
       resetBtn.addEventListener('click', function() {
-        if (confirm('Are you sure you want to reset card positions to default?')) {
+        if (confirm('আপনি কি কার্ড পজিশন ডিফল্টে রিসেট করতে চান?')) {
           localStorage.removeItem('cardPositions');
           location.reload();
         }
-        closeMenu();
       });
-      
-      // Open menu
-      function openMenu() {
-        menuOverlay.style.display = 'block';
-        menuWindow.style.display = 'block';
-        updateSelectionInfo();
-      }
-      
-      // Close menu
-      function closeMenu() {
-        menuOverlay.style.display = 'none';
-        menuWindow.style.display = 'none';
-      }
       
       // Start selection mode function
       function startSelectionMode() {
         isSelectionMode = true;
         cardContainer.classList.add('selection-mode');
-        selectionInfo.textContent = 'Click on cards to select';
+        startSelectionBtn.innerHTML = '<i class="fas fa-stop-circle"></i><span>সিলেক্ট মোড বন্ধ করুন</span>';
         swapBtn.disabled = true;
-        
-        console.log('Selection mode started');
         
         // Clear all selections
         clearSelections();
@@ -518,9 +1201,7 @@
       function endSelectionMode() {
         isSelectionMode = false;
         cardContainer.classList.remove('selection-mode');
-        selectionInfo.textContent = 'Click on cards to select';
-        
-        console.log('Selection mode ended');
+        startSelectionBtn.innerHTML = '<i class="fas fa-mouse-pointer"></i><span>কার্ড সিলেক্ট মোড</span>';
         
         // Clear all selections
         clearSelections();
@@ -564,73 +1245,47 @@
       
       // Toggle card selection
       function toggleCardSelection(card) {
-        if (!isSelectionMode) {
-          console.log('Cancelled because not in selection mode');
-          return;
-        }
+        if (!isSelectionMode) return;
         
         const index = selectedCards.indexOf(card);
         
         if (index === -1) {
-          // Allow maximum 2 cards to be selected
           if (selectedCards.length < 2) {
             selectedCards.push(card);
             card.classList.add('selected');
-            console.log('Card selected: ' + card.querySelector('.card-title').textContent);
           } else {
-            console.log('Already 2 cards are selected');
-            alert('You can select a maximum of 2 cards. Please unselect one first.');
+            alert('সর্বোচ্চ ২টি কার্ড সিলেক্ট করা যাবে। আগে একটি আনসিলেক্ট করুন।');
           }
         } else {
           selectedCards.splice(index, 1);
           card.classList.remove('selected');
-          console.log('Card unselected: ' + card.querySelector('.card-title').textContent);
         }
         
-        // Update selection info
-        updateSelectionInfo();
+        updateButtons();
       }
       
-      // Update selection info
-      function updateSelectionInfo() {
+      // Update buttons
+      function updateButtons() {
         if (selectedCards.length === 0) {
-          selectionInfo.textContent = 'Click on cards to select';
-          swapBtn.disabled = true;
-        } else if (selectedCards.length === 1) {
-          const cardTitle = selectedCards[0].querySelector('.card-title').textContent.trim();
-          selectionInfo.textContent = `Selected: ${cardTitle} - Select one more card`;
           swapBtn.disabled = true;
         } else if (selectedCards.length === 2) {
-          const card1Title = selectedCards[0].querySelector('.card-title').textContent.trim();
-          const card2Title = selectedCards[1].querySelector('.card-title').textContent.trim();
-          selectionInfo.textContent = `Selected: ${card1Title} and ${card2Title}`;
           swapBtn.disabled = false;
+        } else {
+          swapBtn.disabled = true;
         }
       }
       
-      // Swap positions of two cards - FIXED VERSION
+      // Swap positions of two cards
       function swapCardPositions(card1, card2) {
-        console.log('swapCardPositions function called');
-        
         const allCards = Array.from(cardContainer.children);
         const index1 = allCards.indexOf(card1);
         const index2 = allCards.indexOf(card2);
         
-        console.log('Card indices:', index1, index2);
-        
-        if (index1 === -1 || index2 === -1) {
-          console.error('Cards not found in container');
+        if (index1 === -1 || index2 === -1 || index1 === index2) {
           return;
         }
         
-        if (index1 === index2) {
-          console.log('Same card selected twice');
-          return;
-        }
-        
-        // Swap positions between cards
         if (index1 < index2) {
-          // card1 before, card2 after
           if (index2 + 1 < allCards.length) {
             cardContainer.insertBefore(card2, card1);
             cardContainer.insertBefore(card1, allCards[index2 + 1]);
@@ -639,7 +1294,6 @@
             cardContainer.appendChild(card1);
           }
         } else {
-          // card2 before, card1 after
           if (index1 + 1 < allCards.length) {
             cardContainer.insertBefore(card1, card2);
             cardContainer.insertBefore(card2, allCards[index1 + 1]);
@@ -649,20 +1303,8 @@
           }
         }
         
-        console.log('Position swap completed');
-        
-        // Save positions
         saveCardPositions();
-        
-        alert('Card positions swapped successfully!');
-        
-        // Small delay for visual confirmation
-        setTimeout(() => {
-          cardContainer.classList.add('refreshing');
-          setTimeout(() => {
-            cardContainer.classList.remove('refreshing');
-          }, 100);
-        }, 10);
+        alert('কার্ড পজিশন সফলভাবে পরিবর্তন করা হয়েছে!');
       }
       
       // Save card positions
@@ -670,7 +1312,6 @@
         const cardItems = Array.from(cardContainer.querySelectorAll('.card-item'));
         const positions = cardItems.map(item => item.getAttribute('data-id'));
         localStorage.setItem('cardPositions', JSON.stringify(positions));
-        console.log('Positions saved:', positions);
       }
       
       // Load card positions
@@ -680,9 +1321,6 @@
           const positions = JSON.parse(savedPositions);
           const cardItems = Array.from(cardContainer.querySelectorAll('.card-item'));
           
-          console.log('Loaded positions:', positions);
-          
-          // Arrange cards in correct order
           positions.forEach(id => {
             const card = cardItems.find(item => item.getAttribute('data-id') === id);
             if (card) {
@@ -691,6 +1329,9 @@
           });
         }
       }
+      
+      // Initialize buttons
+      updateButtons();
     });
   </script>
 </body>
